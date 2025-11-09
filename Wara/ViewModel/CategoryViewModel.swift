@@ -21,17 +21,19 @@ class CategoryViewModel: ObservableObject {
 
         remoteSource.fetchCategories { [weak self] result in
             guard let self = self else { return }
-            self.isLoading = false
+            DispatchQueue.main.async {
+                self.isLoading = false
 
-            switch result {
-            case .success(let dtos):
-                self.categories = dtos.map { dto in
-                    // Gunakan englishName sebagai judul dan app_category_icon_url untuk ikon
-                    let url = dto.appCategoryIconURL.flatMap { URL(string: $0) }
-                    return Category(name: dto.englishName, iconURL: url, description: dto.appCategoryDescription)
+                switch result {
+                case .success(let dtos):
+                    self.categories = dtos.map { dto in
+                        // Gunakan englishName sebagai judul dan app_category_icon_url untuk ikon
+                        let url = dto.appCategoryIconURL.flatMap { URL(string: $0) }
+                        return Category(name: dto.englishName, iconURL: url, description: dto.appCategoryDescription)
+                    }
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
                 }
-            case .failure(let error):
-                self.errorMessage = error.localizedDescription
             }
         }
     }
