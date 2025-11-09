@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct ScanResultView: View {
     let onDismiss: () -> Void
     let rawOCRText: String
+    let fallbackImage: UIImage?
 
     @StateObject private var viewModel = ScanResultViewModel()
     @State private var showSheet = false
@@ -48,17 +50,27 @@ struct ScanResultView: View {
                             VStack{
                                 RemoteImageCarouselView(
                                     isHalalKMF: viewModel.isKMF,
-                                    imageURLs: viewModel.imageURLs
+                                    imageURLs: viewModel.imageURLs,
+                                    fallbackImage: fallbackImage
                                 )
 
-                                Text(viewModel.englishName)
-                                    .font(.body.weight(.semibold))
-                                    .foregroundColor(.primary)
-                                    .padding(.top, 10)
+                                VStack(spacing: 4) {
+                                    Text(viewModel.englishName)
+                                        .font(.body.weight(.semibold))
+                                        .foregroundColor(.primary)
+                                        .padding(.top, 10)
 
-                                Text(viewModel.koreanNameWithPronunciation)
-                                    .font(.body)
-                                    .foregroundColor(.primary)
+                                    VStack(spacing: 2) {
+                                        Text(viewModel.koreanName)
+                                            .font(.body)
+                                            .foregroundColor(.primary)
+                                        if !viewModel.koreanPronunciation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                            Text(viewModel.koreanPronunciation)
+                                                .font(.body)
+                                                .foregroundColor(.primary)
+                                        }
+                                    }
+                                }
 
                                 ResultInfoCard(productType: viewModel.productType)
                             }
@@ -125,20 +137,21 @@ struct ScanResultView: View {
                     
                     // Ingredient
                     CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
-                        VStack(alignment: .leading, spacing: 12){
-                            Text("Ingredient :")
+                        VStack(alignment: .leading, spacing: 8){
+                            Text("Ingredients:")
                                 .font(.body.weight(.semibold))
                                 .foregroundColor(.primary)
                             
-                            Text(viewModel.englishIngredients)
-                                .font(.caption)
-                                .foregroundColor(.primary)
+                            if !viewModel.englishIngredients.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                Text(viewModel.englishIngredients)
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                            }
 
                             if !viewModel.listedIngredientsEnglish.isEmpty {
-                                Text("Listed Ingredients :")
+                                Text("Listed Ingredients:")
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.primary)
-                                    .padding(.top, 8)
 
                                 Text(viewModel.listedIngredientsEnglish.joined(separator: ", "))
                                     .font(.caption)
@@ -146,10 +159,9 @@ struct ScanResultView: View {
                             }
 
                             if !viewModel.notListedIngredientsEnglish.isEmpty {
-                                Text("Not Listed Ingredients :")
+                                Text("Not Listed Ingredients:")
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.primary)
-                                    .padding(.top, 8)
 
                                 Text(viewModel.notListedIngredientsEnglish.joined(separator: ", "))
                                     .font(.caption)
@@ -174,11 +186,11 @@ struct ScanResultView: View {
                     // More Information
                     CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
                         VStack(alignment: .leading, spacing: 0){
-                            Text("More information :")
+                            Text("More information:")
                                 .font(.headline)
                                 .foregroundColor(.primary)
                             
-                            Text("Korean Name :")
+                            Text("Korean Name:")
                                 .font(.subheadline)
                                 .foregroundColor(.primary)
                                 .padding(.top, 8)
@@ -187,7 +199,7 @@ struct ScanResultView: View {
                                 .foregroundColor(.primary)
                                 
                             
-                            Text("English Translation :")
+                            Text("English Translation:")
                                 .font(.subheadline)
                                 .foregroundColor(.primary)
                                 .padding(.top, 8)
@@ -195,7 +207,7 @@ struct ScanResultView: View {
                                 .font(.body)
                                 .foregroundColor(.primary)
                             
-                            Text("Company Name :")
+                            Text("Company Name:")
                                 .font(.subheadline)
                                 .foregroundColor(.primary)
                                 .padding(.top, 8)
@@ -278,5 +290,5 @@ struct ScanResultView: View {
 }
 
 #Preview {
-    ScanResultView(onDismiss: {}, rawOCRText: "Sample OCR")
+    ScanResultView(onDismiss: {}, rawOCRText: "Sample OCR", fallbackImage: nil)
 }

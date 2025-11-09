@@ -34,6 +34,7 @@ class CameraViewModel: ObservableObject {
     @Published var isTorchOn: Bool = false
     @Published var isIngredientLabelDectected: Bool = false
     @Published var lastCombinedOCRText: String = ""
+    @Published var lastCapturedImage: UIImage?
     
     // MARK: - Initialization
     init(modelContext: ModelContext) {
@@ -92,6 +93,9 @@ class CameraViewModel: ObservableObject {
                     self.scanState = .error("Gagal menormalkan gambar.")
                     return
                 }
+
+                // Simpan gambar terakhir yang berhasil diproses sebagai fallback
+                self.lastCapturedImage = normalizedImage
                 
                 let extractedTextsWithBoxes = try await ocrService.extractKoreanTextWithBoxes(
                     from: normalizedImage

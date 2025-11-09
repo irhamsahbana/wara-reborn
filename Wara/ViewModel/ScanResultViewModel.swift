@@ -43,6 +43,8 @@ class ScanResultViewModel: ObservableObject {
         }
         return d.koreanName
     }
+    var koreanName: String { data?.koreanName ?? "" }
+    var koreanPronunciation: String { data?.koreanPronunciation ?? "" }
 
     var englishIngredients: String { data?.englishIngredients ?? "" }
     var facilityInfo: String { data?.facility?.englishDescription ?? data?.englishFacilityInfo ?? "" }

@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct RemoteImageCarouselView: View {
     let isHalalKMF: Bool
     let imageURLs: [URL]
+    let fallbackImage: UIImage?
 
     @State private var currentIndex = 0
 
@@ -33,15 +35,27 @@ struct RemoteImageCarouselView: View {
                                 .scaledToFit()
                                 .frame(width: 160, height: 200)
                         case .failure:
-                            Image(systemName: "photo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 160, height: 200)
-                                .foregroundColor(.gray)
+                            if let local = fallbackImage {
+                                Image(uiImage: local)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 160, height: 200)
+                            } else {
+                                Image(systemName: "photo")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 160, height: 200)
+                                    .foregroundColor(.gray)
+                            }
                         @unknown default:
                             EmptyView()
                         }
                     }
+                } else if let local = fallbackImage {
+                    Image(uiImage: local)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 160, height: 200)
                 } else {
                     Image(systemName: "photo")
                         .resizable()
@@ -117,6 +131,7 @@ struct RemoteImageCarouselView: View {
 #Preview {
     RemoteImageCarouselView(
         isHalalKMF: true,
-        imageURLs: [URL(string: "https://via.placeholder.com/300")!]
+        imageURLs: [URL(string: "https://via.placeholder.com/300")!],
+        fallbackImage: nil
     )
 }
