@@ -52,7 +52,8 @@ class HttpClient {
                        encoding: JSONEncoding.default,
                        headers: headers)
                 .validate()
-                .responseDecodable(of: T.self) { response in
+                // Perform decoding off the main queue to avoid UI stalls
+                .responseDecodable(of: T.self, queue: .global(qos: .utility)) { response in
                     switch response.result {
                     case .success(let value):
                         completion(.success(value))

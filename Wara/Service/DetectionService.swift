@@ -18,6 +18,7 @@ class DetectionService {
     }
     
     // MARK: - Methods
+    @MainActor
     func analyzeIngredients(text: String) async -> DetectionResult {
         // Check are the text contain ingredient keyword
         let containsIngredientsLabel = hasIngredientsLabel(in: text)

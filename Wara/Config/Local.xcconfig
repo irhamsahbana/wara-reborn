@@ -4,7 +4,7 @@
 
 // Define scheme & host to avoid '//' comment issues entirely
 API_SCHEME = http
-API_HOST = localhost:4041
+API_HOST = 192.168.0.101:4041
 
 // (Optional) Keep API_BASE_URL if needed elsewhere
 SLASH = /

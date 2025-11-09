@@ -29,17 +29,17 @@ struct ResultInfoCard: View {
 
                         
                         Image(systemName: icon)
-                            .font(.system(size: 12, weight: .bold))
+                            .font(.caption2.weight(.bold))
                             .foregroundColor(.black)
                     }
                     
                     Text(title)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.subheadline.weight(.semibold))
                         .foregroundColor(.black)
                 }
                 
                 Text(description)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.body)
                     .foregroundColor(.black)
             }
             .padding(.vertical, 14)

@@ -42,7 +42,7 @@ struct CustomAppBar: View {
                 onFavorite?()
             }) {
                 Image(systemName: "heart")
-                    .font(.system(size: 18, weight: .medium))
+                    .font(.subheadline.weight(.medium))
                     .foregroundColor(.black)
                     .frame(width: 36, height: 36)
                     .background(

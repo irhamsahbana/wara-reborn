@@ -33,6 +33,7 @@ class CameraViewModel: ObservableObject {
     @Published var scanState: ScanState = .idle
     @Published var isTorchOn: Bool = false
     @Published var isIngredientLabelDectected: Bool = false
+    @Published var lastCombinedOCRText: String = ""
     
     // MARK: - Initialization
     init(modelContext: ModelContext) {
@@ -96,6 +97,9 @@ class CameraViewModel: ObservableObject {
                     from: normalizedImage
                 )
                 let combinedText = extractedTextsWithBoxes.map { $0.text }.joined(separator: " ")
+
+                // Simpan OCR gabungan untuk dikirim ke API scan
+                self.lastCombinedOCRText = combinedText
                 
                 let result = await detectionService.analyzeIngredients(text: combinedText)
                 

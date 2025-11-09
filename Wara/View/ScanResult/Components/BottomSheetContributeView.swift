@@ -39,7 +39,7 @@ struct BottomSheetContributeView: View {
                 }) {
                     Image(systemName: "xmark")
                         .foregroundColor(.gray)
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.subheadline.weight(.semibold))
                         .padding(10)
                         .background(Color(.systemGray6))
                         .clipShape(Circle())
@@ -48,7 +48,7 @@ struct BottomSheetContributeView: View {
             
             VStack(alignment: .leading, spacing: 12) {
                 Text("**Looks like this product’s new to us!**\nSubmit it so our team can review and verify the ingredients.")
-                    .font(.system(size: 15))
+                    .font(.body)
                     .foregroundColor(.black)
 
                 HStack(alignment: .top, spacing: 12) {
@@ -59,7 +59,7 @@ struct BottomSheetContributeView: View {
                         .cornerRadius(12)
 
                     Text("By sharing this, you help others halal chingu discover safe and halal food choices.")
-                        .font(.system(size: 15))
+                        .font(.body)
                         .foregroundColor(.gray)
                 }
             }

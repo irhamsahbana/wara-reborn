@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ScanResultView: View {
     let onDismiss: () -> Void
-    
-    let productType: ProductType = .SAFE_TO_CONSUME
-    
+    let rawOCRText: String
+
+    @StateObject private var viewModel = ScanResultViewModel()
     @State private var showSheet = false
     
     var body: some View {
@@ -22,51 +22,72 @@ struct ScanResultView: View {
                     onFavorite: { print("Favorite tapped") }
                 )
                 
-                ScrollView{
-                    CardView(backgroundColor: Color("chipBackground"), width: .infinity){
-                        VStack{
-                            ImageCarouselView(
-                                isHalalKMF: true,
-                                images: ["slider1", "slider2", "slider3"]
-                            )
-                            
-                            Text("Korean Snack")
-                                .font(.body.weight(.semibold))
-                                .foregroundColor(.primary)
-                                .padding(.top, 10)
-                            
-                            Text("Gwa-ja")
-                                .font(.body)
-                                .foregroundColor(.primary)
-                            
-                            ResultInfoCard(productType: productType)
-                        }
+                if viewModel.isLoading && viewModel.data == nil {
+                    VStack(spacing: 12) {
+                        ProgressView()
+                        Text("Scanning product…")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
-                    .padding(.top, 16)
-                    .padding(.horizontal, 16)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                } else if let err = viewModel.errorMessage, viewModel.data == nil {
+                    VStack(spacing: 12) {
+                        Text(err)
+                            .font(.body)
+                            .foregroundColor(.primary)
+                        Button("Back") {
+                            onDismiss()
+                        }
+                        .buttonStyle(PrimaryButtonStyle(backgroundColor: Color("primaryblue")))
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                } else {
+                    ScrollView{
+                        CardView(backgroundColor: Color("chipBackground"), width: .infinity){
+                            VStack{
+                                RemoteImageCarouselView(
+                                    isHalalKMF: viewModel.isKMF,
+                                    imageURLs: viewModel.imageURLs
+                                )
+
+                                Text(viewModel.englishName)
+                                    .font(.body.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .padding(.top, 10)
+
+                                Text(viewModel.koreanNameWithPronunciation)
+                                    .font(.body)
+                                    .foregroundColor(.primary)
+
+                                ResultInfoCard(productType: viewModel.productType)
+                            }
+                        }
+                        .padding(.top, 16)
+                        .padding(.horizontal, 16)
                     
                     CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
-                        if(productType == ProductType.HALAL){
+                        if(viewModel.productType == ProductType.HALAL){
                             VStack(alignment: .leading, spacing: 12){
                                 Text("Certificate No :")
-                                    .font(.system(size: 16, weight: .semibold))
+                                    .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.black)
                                 
                                 Text("KMFHC22-0231")
-                                    .font(.system(size: 14))
+                                    .font(.caption)
                                     .foregroundColor(.gray)
                                 
                                 Text("Certificate Valid :")
-                                    .font(.system(size: 16, weight: .semibold))
+                                    .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.black)
                                 
                                 Text("2022-10-18 ~ 2025-10-17")
-                                    .font(.system(size: 14))
+                                    .font(.caption)
                                     .foregroundColor(.gray)
                             }
                         }
                         
-                        if(productType == ProductType.SAFE_TO_CONSUME){
+                        if(viewModel.productType == ProductType.SAFE_TO_CONSUME){
                             VStack(alignment: .center, spacing: 12){
                                 Text("Looks like this product’s new to us! ")
                                     .font(.body.weight(.semibold))
@@ -87,15 +108,15 @@ struct ScanResultView: View {
                             }
                         }
                         
-                        if(productType == ProductType.DOUBTFULL || productType == ProductType.NON_HALAL){
+                        if(viewModel.productType == ProductType.DOUBTFULL || viewModel.productType == ProductType.NON_HALAL){
                             VStack(alignment: .leading, spacing: 12){
                                 Text("Suspected Ingredient :")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(.black)
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.primary)
                                 
-                                Text("TEST")
-                                    .font(.system(size: 14))
-                                    .foregroundColor(.gray)
+                                Text(viewModel.suspectedIngredientsEnglish.joined(separator: ", "))
+                                    .font(.body)
+                                    .foregroundColor(.primary)
                             }
                         }
                     }
@@ -103,24 +124,48 @@ struct ScanResultView: View {
                     .padding(.horizontal, 16)
                     
                     // Ingredient
-                    CardView(backgroundColor: Color("chipBackground"), width: .infinity){
+                    CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
                         VStack(alignment: .leading, spacing: 12){
                             Text("Ingredient :")
                                 .font(.body.weight(.semibold))
                                 .foregroundColor(.primary)
                             
-                            Text("Wheat flour , sugar, shortening (palm oil: Malaysia), corn starch (imported: Russia, Hungary, Serbia), vegetable cream, ammonium bicarbonate, sodium bicarbonate], Semi-chocolate I [Processed fat I (hydrogenated palm kernel oil: Malaysia), sugar")
+                            Text(viewModel.englishIngredients)
                                 .font(.caption)
                                 .foregroundColor(.primary)
-                            
-                            Text("Manufactured with same Facility :")
-                                .font(.body.weight(.semibold))
-                                .foregroundColor(.primary)
-                                .padding(.top, 8)
-                            
-                            Text("Flour, Milk, egg")
-                                .font(.system(size: 14))
-                                .foregroundColor(.primary)
+
+                            if !viewModel.listedIngredientsEnglish.isEmpty {
+                                Text("Listed Ingredients :")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .padding(.top, 8)
+
+                                Text(viewModel.listedIngredientsEnglish.joined(separator: ", "))
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                            }
+
+                            if !viewModel.notListedIngredientsEnglish.isEmpty {
+                                Text("Not Listed Ingredients :")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .padding(.top, 8)
+
+                                Text(viewModel.notListedIngredientsEnglish.joined(separator: ", "))
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                            }
+
+                            if viewModel.isFacilityInformed {
+                                Text("Manufactured with same Facility :")
+                                    .font(.body.weight(.semibold))
+                                    .foregroundColor(.primary)
+                                    .padding(.top, 8)
+                                
+                                Text(viewModel.facilityInfo)
+                                    .font(.caption)
+                                    .foregroundColor(.primary)
+                            }
                         }
                     }
                     .padding(.top, 16)
@@ -137,7 +182,7 @@ struct ScanResultView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.primary)
                                 .padding(.top, 8)
-                            Text("과자 (chok-seu-tik)")
+                            Text(viewModel.koreanNameWithPronunciation)
                                 .font(.body)
                                 .foregroundColor(.primary)
                                 
@@ -146,7 +191,7 @@ struct ScanResultView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.primary)
                                 .padding(.top, 8)
-                            Text("Korean Snack")
+                            Text(viewModel.englishProductCategory)
                                 .font(.body)
                                 .foregroundColor(.primary)
                             
@@ -154,10 +199,10 @@ struct ScanResultView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.primary)
                                 .padding(.top, 8)
-                            Text("롯데제과 (주)")
+                            Text(viewModel.koreanProducent)
                                 .font(.body)
                                 .foregroundColor(.primary)
-                            Text("(Lotte Snack Co., Ltd.)")
+                            Text("(\(viewModel.englishProducent))")
                                 .font(.body)
                                 .foregroundColor(.primary)
                             
@@ -219,15 +264,19 @@ struct ScanResultView: View {
                     }
                     .padding(.top, 16)
                     .padding(.horizontal, 16)
+                    }
                 }
             }
             .sheet(isPresented: $showSheet) {
                 BottomSheetContributeView(isPresented: $showSheet)
+            }
+            .task {
+                await viewModel.scan(rawOCRText: rawOCRText)
             }
         }
     }
 }
 
 #Preview {
-    ScanResultView(onDismiss: {})
+    ScanResultView(onDismiss: {}, rawOCRText: "Sample OCR")
 }
