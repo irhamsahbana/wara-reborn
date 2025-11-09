@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FoodDetailHeader: View {
+    let id: String
     let title: String
     let description: String
     let iconURL: URL?
@@ -60,23 +61,7 @@ struct FoodDetailHeader: View {
                         
                         Group {
                             if let url = iconURL {
-                                AsyncImage(url: url) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                    case .success(let image):
-                                        image
-                                            .resizable()
-                                            .scaledToFit()
-                                    case .failure:
-                                        Image(systemName: "photo")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .foregroundColor(.gray)
-                                    @unknown default:
-                                        EmptyView()
-                                    }
-                                }
+                                CachedRemoteImageView(id: id, url: url, contentMode: .fit, cornerRadius: 12)
                             } else {
                                 Image(systemName: "photo")
                                     .resizable()
@@ -98,6 +83,7 @@ struct FoodDetailHeader: View {
 
 #Preview {
     FoodDetailHeader(
+        id: "",
         title: "Food Souvenirs",
         description: "Taste what locals love! Curated Korean food you can enjoy with confidence.",
         iconURL: nil,

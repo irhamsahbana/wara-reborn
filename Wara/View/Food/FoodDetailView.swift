@@ -37,6 +37,7 @@ struct FoodDetailView: View {
     var body: some View {
         VStack{
             FoodDetailHeader(
+                id: id,
                 title: title,
                 description: description,
                 iconURL: iconURL,
