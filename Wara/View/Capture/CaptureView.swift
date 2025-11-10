@@ -16,6 +16,7 @@ struct CaptureView: View {
     
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isShowingShowcaseAnimation: Bool = true
+    @State private var showDialog = false
     
     init() {
         _viewModel = StateObject(
@@ -46,7 +47,7 @@ struct CaptureView: View {
                         Button(action: {
                             dismiss()
                         }) {
-                            Image(systemName: "chevron.left")
+                            Image(systemName: "xmark.circle.fill")
                                 .font(.title3)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
@@ -55,6 +56,19 @@ struct CaptureView: View {
                                 .clipShape(Circle())
                         }
                         Spacer()
+                        Button(action: {
+                            withAnimation {
+                                showDialog = true
+                            }
+                        }) {
+                            Image(systemName: "info.circle.fill")
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .padding(12)
+                                .background(Color.black.opacity(0.5))
+                                .clipShape(Circle())
+                        }
                     }
                     .padding(.horizontal, 16)
                 }
@@ -202,6 +216,26 @@ struct CaptureView: View {
                 }
             }
         }
+        .customDialog(isShown: $showDialog) {
+            ZStack(alignment: .topTrailing) {
+                InstructionView()
+                
+                Button(action: {
+                    showDialog = false
+                }) {
+                    Image(systemName: "xmark")
+                            .font(.title3)
+                            .foregroundColor(.black)
+                            .padding(12)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .shadow(color: Color.black.opacity(0.18), radius: 6, x: 0, y: 3)
+                }
+            }
+
+        }
+                    
+                   
     }
 }
 
