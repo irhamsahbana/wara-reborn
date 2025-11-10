@@ -79,21 +79,21 @@ struct ScanResultView: View {
                         .padding(.horizontal, 16)
                     
                     CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
-                        if(viewModel.productType == ProductType.HALAL){
+                        if viewModel.isKMF {
                             VStack(alignment: .leading, spacing: 12){
                                 Text("Certificate No:")
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.primary)
-                                
-                                Text("KMFHC22-0231")
+
+                                Text(viewModel.kmfCertificateNo)
                                     .font(.caption)
                                     .foregroundColor(.primary)
-                                
+
                                 Text("Certificate Valid:")
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundColor(.primary)
-                                
-                                Text("2022-10-18 ~ 2025-10-17")
+
+                                Text(viewModel.kmfCertificateValid)
                                     .font(.caption)
                                     .foregroundColor(.primary)
                             }

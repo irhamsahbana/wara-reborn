@@ -39,6 +39,10 @@ class ScanResultViewModel: ObservableObject {
 
     var isKMF: Bool { data?.isKmf ?? false }
 
+    // KMF Certificate details
+    var kmfCertificateNo: String { data?.certificateNo ?? "" }
+    var kmfCertificateValid: String { data?.certificateValid ?? "" }
+
     var imageURLs: [URL] {
         guard let d = data else { return [] }
         return [d.frontCoverURL, d.backCoverURL]
