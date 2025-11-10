@@ -81,21 +81,21 @@ struct ScanResultView: View {
                     CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
                         if(viewModel.productType == ProductType.HALAL){
                             VStack(alignment: .leading, spacing: 12){
-                                Text("Certificate No :")
+                                Text("Certificate No:")
                                     .font(.subheadline.weight(.semibold))
-                                    .foregroundColor(.black)
+                                    .foregroundColor(.primary)
                                 
                                 Text("KMFHC22-0231")
                                     .font(.caption)
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(.primary)
                                 
-                                Text("Certificate Valid :")
+                                Text("Certificate Valid:")
                                     .font(.subheadline.weight(.semibold))
-                                    .foregroundColor(.black)
+                                    .foregroundColor(.primary)
                                 
                                 Text("2022-10-18 ~ 2025-10-17")
                                     .font(.caption)
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(.primary)
                             }
                         }
                         

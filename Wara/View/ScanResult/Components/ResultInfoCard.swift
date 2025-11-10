@@ -83,8 +83,8 @@ struct ResultInfoCard: View {
             
             if(productType == .NON_HALAL){
                 InfoCard(
-                    title: ProductType.DOUBTFULL.rawValue,
-                    description: "Requires further checking",
+                    title: ProductType.NON_HALAL.rawValue,
+                    description: "Contains forbidden ingredients",
                     color: Color("red"),
                     icon: "xmark"
                 )

@@ -17,13 +17,24 @@ class ScanResultViewModel: ObservableObject {
     private let remote = ScanRemoteSource.shared
 
     // MARK: - Derived UI properties
+    private func mapStatusToProductType(_ status: String) -> ProductType {
+        switch status.lowercased() {
+        case "kmf_certified":
+            return .HALAL
+        case "no_haram":
+            return .SAFE_TO_CONSUME
+        case "doubtful":
+            return .DOUBTFULL
+        case "haram":
+            return .NON_HALAL
+        default:
+            return .SAFE_TO_CONSUME
+        }
+    }
+
     var productType: ProductType {
-        guard let d = data else { return .SAFE_TO_CONSUME }
-        if d.isKmf { return .HALAL }
-        // If any doubtful ingredient exists, mark as DOUBTFULL
-        let hasDoubtful = d.listedIngridients.contains { $0.category.lowercased() == "doubtful" }
-        if hasDoubtful { return .DOUBTFULL }
-        return .SAFE_TO_CONSUME
+        guard let s = data?.status, !s.isEmpty else { return .SAFE_TO_CONSUME }
+        return mapStatusToProductType(s)
     }
 
     var isKMF: Bool { data?.isKmf ?? false }

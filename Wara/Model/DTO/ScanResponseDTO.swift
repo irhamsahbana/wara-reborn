@@ -47,6 +47,9 @@ struct ScanFacilityDTO: Decodable {
 
 /// Payload utama hasil scan dari backend.
 struct ScanDataDTO: Decodable {
+    // Status keseluruhan hasil scan dari backend
+    // Nilai yang diharapkan: kmf_certified, no_haram, doubtful, haram
+    let status: String
     let englishName: String
     let koreanName: String
     let koreanPronunciation: String?
@@ -61,12 +64,15 @@ struct ScanDataDTO: Decodable {
     let englishFacilityInfo: String?
     let isFromDb: Bool
     let isKmf: Bool
+    let certificateNo: String
+    let certificateValid: String
     let ingridients: [ScanIngredientDTO]
     let listedIngridients: [ScanIngredientDTO]
     let notListedIngridients: [ScanIngredientDTO]
     let facility: ScanFacilityDTO?
 
     enum CodingKeys: String, CodingKey {
+        case status
         case englishName = "english_name"
         case koreanName = "korean_name"
         case koreanPronunciation = "korean_pronunciation"
@@ -81,6 +87,8 @@ struct ScanDataDTO: Decodable {
         case englishFacilityInfo = "english_facility_info"
         case isFromDb = "is_from_db"
         case isKmf = "is_kmf"
+        case certificateNo = "certificate_no"
+        case certificateValid = "certificate_valid"
         case ingridients
         case listedIngridients = "listed_ingridients"
         case notListedIngridients = "not_listed_ingridients"
