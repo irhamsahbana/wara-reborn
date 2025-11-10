@@ -15,6 +15,7 @@ struct FoodCard: View {
     let isLike: Bool
     let isHalalKMF: Bool
     let width: CGFloat?
+    let height: CGFloat? = nil
     let onFavoriteTapped: (() -> Void)?
     
     var body: some View {
@@ -25,6 +26,11 @@ struct FoodCard: View {
             guard let w = width else { return 160 }
             if w.isNaN || !w.isFinite || w <= 0 { return 160 }
             return w
+        }()
+        let resolvedHeight: CGFloat = {
+            guard let h = height else { return 220 }
+            if h.isNaN || !h.isFinite || h <= 0 { return 220 }
+            return h
         }()
         
         VStack(alignment: .leading, spacing: 0) {
@@ -82,10 +88,17 @@ struct FoodCard: View {
                 Text(title)
                     .font(.headline)
                     .foregroundColor(.primary)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                    .truncationMode(.tail)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Text(subtitle)
                     .font(.subheadline)
                     .foregroundColor(.primary)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 // Label
                 HStack(spacing: 4) {
@@ -119,6 +132,8 @@ struct FoodCard: View {
         .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
         .frame(maxWidth: isInfiniteWidth ? .infinity : nil)
         .frame(width: isInfiniteWidth ? nil : resolvedWidth)
+        .frame(height: resolvedHeight)
+        .clipped()
 
     }
 }

@@ -13,8 +13,11 @@ class ScanResultViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var data: ScanDataDTO?
+    @Published var alternativeItems: [AlternativeProductItemDTO] = []
+    @Published var isLoadingAlternatives: Bool = false
 
     private let remote = ScanRemoteSource.shared
+    private let altRemote = AlternativeRemoteSource.shared
 
     // MARK: - Derived UI properties
     private func mapStatusToProductType(_ status: String) -> ProductType {
@@ -110,11 +113,36 @@ class ScanResultViewModel: ObservableObject {
                     switch result {
                     case .success(let payload):
                         self.data = payload
+                        self.loadAlternatives()
                     case .failure(let err):
                         self.errorMessage = err.localizedDescription
                     }
                     self.isLoading = false
                     continuation.resume()
+                }
+            }
+        }
+    }
+
+    /// Memuat alternatif produk berdasarkan kategori dari hasil scan.
+    private func loadAlternatives() {
+        // Gunakan kategori Korea jika tersedia; fallback ke Inggris.
+        let category = data?.koreanProductCategory?.trimmingCharacters(in: .whitespacesAndNewlines)
+            ?? data?.englishProductCategory?.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard let category, !category.isEmpty else { return }
+        isLoadingAlternatives = true
+
+        altRemote.fetchAlternatives(category: category, paginate: 5) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let items):
+                    self.alternativeItems = items
+                    self.isLoadingAlternatives = false
+                case .failure:
+                    self.alternativeItems = []
+                    self.isLoadingAlternatives = false
                 }
             }
         }
