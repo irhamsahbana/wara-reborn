@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ScannedProductView: View {
+    @Environment(\.dismiss) private var dismiss
     @State private var query: String = ""
     @State private var products: [ScannedProductView.Product] = ScannedProductView.SampleData.products
 
@@ -56,17 +57,29 @@ struct ScannedProductView: View {
         VStack(spacing: 8) {
             Image(systemName: "chevron.up")
                 .foregroundColor(.primary)
-                .font(.title3.weight(.medium))
+                .font(.headline.weight(.medium))
             HStack(spacing: 8) {
                 Image(systemName: "camera.fill")
                     .foregroundColor(.primary)
                 Text("Back To Scan")
-                    .font(.title3.weight(.medium))
+                    .font(.body.weight(.medium))
                     .foregroundColor(.primary)
             }
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.horizontal, 16)
         }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            dismiss()
+        }
+        .gesture(
+            DragGesture(minimumDistance: 10)
+                .onEnded { value in
+                    if value.translation.height > 30 {
+                        dismiss()
+                    }
+                }
+        )
     }
 
     private var searchBar: some View {

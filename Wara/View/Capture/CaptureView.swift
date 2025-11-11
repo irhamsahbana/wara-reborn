@@ -17,6 +17,7 @@ struct CaptureView: View {
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isShowingShowcaseAnimation: Bool = true
     @State private var showDialog = false
+    @State private var showScannedProduct: Bool = false
     
     init() {
         _viewModel = StateObject(
@@ -125,53 +126,85 @@ struct CaptureView: View {
                        ? "detected" : "scanning")
                 )
                 
-                HStack(alignment: .center, spacing: 60) {
-                    // Tombol Impor Galeri
-                    PhotosPicker(
-                        selection: $selectedPhotoItem,
-                        matching: .images
-                    ) {
-                        Image(systemName: "photo.on.rectangle.angled")
+                VStack (spacing: 28){
+                    HStack(alignment: .center, spacing: 60) {
+                        // Tombol Impor Galeri
+                        PhotosPicker(
+                            selection: $selectedPhotoItem,
+                            matching: .images
+                        ) {
+                            Image(systemName: "photo.on.rectangle.angled")
+                                .font(.title)
+                                .foregroundColor(.white)
+                        }
+                        .frame(width: 64, height: 64)
+                        .background(.black.opacity(0.2))
+                        .clipShape(Circle())
+                        .accessibilityLabel("Ambil foto dari galeri")
+                        
+                        // Tombol Capture
+                        Button(action: {
+                            viewModel.capture()
+                        }) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.white)
+                                    .frame(width: 65, height: 65)
+                                Circle()
+                                    .stroke(Color.white, lineWidth: 4)
+                                    .frame(width: 75, height: 75)
+                            }
+                        }.accessibilityLabel("Tekan untuk ambil foto dari kamera")
+                        
+                        // Tombol Senter
+                        Button(action: viewModel.toggleTorch) {
+                            Image(
+                                systemName: viewModel.isTorchOn
+                                ? "bolt.fill" : "bolt.slash.fill"
+                            )
                             .font(.title)
                             .foregroundColor(.white)
-                    }
-                    .frame(width: 64, height: 64)
-                    .background(.black.opacity(0.2))
-                    .clipShape(Circle())
-                    .accessibilityLabel("Ambil foto dari galeri")
-                    
-                    // Tombol Capture
-                    Button(action: {
-                        viewModel.capture()
-                    }) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.white)
-                                .frame(width: 65, height: 65)
-                            Circle()
-                                .stroke(Color.white, lineWidth: 4)
-                                .frame(width: 75, height: 75)
                         }
-                    }.accessibilityLabel("Tekan untuk ambil foto dari kamera")
-                    
-                    // Tombol Senter
-                    Button(action: viewModel.toggleTorch) {
-                        Image(
-                            systemName: viewModel.isTorchOn
-                            ? "bolt.fill" : "bolt.slash.fill"
-                        )
-                        .font(.title)
-                        .foregroundColor(.white)
+                        .frame(width: 64, height: 64)
+                        .background(.black.opacity(0.2))
+                        .clipShape(Circle())
                     }
-                    .frame(width: 64, height: 64)
-                    .background(.black.opacity(0.2))
-                    .clipShape(Circle())
+                    .padding(.top, 32)
+                    .padding(.bottom, 4)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.black.opacity(0.1))
+                    .accessibilityHidden(areControlsHidden)
+
+                    VStack(spacing: 8) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "document.viewfinder.fill")
+                                .foregroundColor(.white)
+                            Text("Scanned Product")
+                                .font(.headline.weight(.medium))
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.horizontal, 16)
+
+                        Image(systemName: "chevron.down")
+                            .foregroundColor(.white)
+                            .font(.body.weight(.medium))
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        showScannedProduct = true
+                    }
+                    .gesture(
+                        DragGesture(minimumDistance: 20)
+                            .onEnded { value in
+                                if value.translation.height < -30 {
+                                    showScannedProduct = true
+                                }
+                            }
+                    )
+                    .padding(.bottom, 8)
                 }
-                .padding(.top, 32)
-                .padding(.bottom, 4)
-                .frame(maxWidth: .infinity)
-                .background(Color.black.opacity(0.1))
-                .accessibilityHidden(areControlsHidden)
+                
             }
             .frame(maxWidth: .infinity)
             
@@ -233,6 +266,11 @@ struct CaptureView: View {
                 }
             }
 
+        }
+        .fullScreenCover(isPresented: $showScannedProduct) {
+            NavigationStack {
+                ScannedProductView()
+            }
         }
                     
                    
