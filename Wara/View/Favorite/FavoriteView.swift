@@ -27,7 +27,7 @@ struct FavoriteView: View {
                     if selectedTab == .favorite {
                         FavoriteProductView()
                     } else {
-                        ScannedProductView()
+                        ScannedProductGridView()
                     }
                 }
                 .padding(.horizontal, 16)

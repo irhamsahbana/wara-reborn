@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ScannedProductView: View {
+struct ScannedProductGridView: View {
     let columns = [
            GridItem(.flexible(), spacing: 12),
            GridItem(.flexible(), spacing: 12)
@@ -74,5 +74,5 @@ struct ScannedProductView: View {
 }
 
 #Preview {
-    ScannedProductView()
+    ScannedProductGridView()
 }
