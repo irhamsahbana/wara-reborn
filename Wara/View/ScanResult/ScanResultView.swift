@@ -8,6 +8,32 @@
 import SwiftUI
 import UIKit
 
+// Animated gradient progress bar used during scanning
+private struct ProgressGradientBar: View {
+    let progress: Double // 0.0 ... 1.0
+
+    private var clamped: Double { max(0.0, min(progress, 1.0)) }
+
+    var body: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color(.systemGray5))
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color("green2"), Color("yellow")],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .frame(width: geo.size.width * clamped)
+            }
+        }
+        .frame(height: 12)
+    }
+}
+
 struct ScanResultView: View {
     let onDismiss: () -> Void
     let rawOCRText: String
@@ -15,6 +41,8 @@ struct ScanResultView: View {
 
     @StateObject private var viewModel = ScanResultViewModel()
     @State private var showSheet = false
+    @State private var loadingProgress: Double = 0.0
+    @State private var loadingTimer: Timer?
     
     var body: some View {
         NavigationView {
@@ -25,12 +53,26 @@ struct ScanResultView: View {
                 )
                 
                 if viewModel.isLoading && viewModel.data == nil {
-                    VStack(spacing: 12) {
-                        ProgressView()
-                        Text("Scanning product…")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                    VStack(spacing: 16) {
+                        Image("girlSearching")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 140)
+
+                        VStack(spacing: 6) {
+                            Text("Analyzing ingredients carefully...")
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(.primary)
+                            Text("This might take just a few seconds!")
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(.primary)
+                        }
+
+                        ProgressGradientBar(progress: loadingProgress)
+                            .padding(.horizontal, 24)
+                            .animation(.easeInOut(duration: 0.25), value: loadingProgress)
                     }
+                    .padding(.vertical, 24)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 } else if let err = viewModel.errorMessage, viewModel.data == nil {
                     VStack(spacing: 12) {
@@ -283,7 +325,44 @@ struct ScanResultView: View {
             .task {
                 await viewModel.scan(rawOCRText: rawOCRText)
             }
+            .onChange(of: viewModel.isLoading) { isLoading in
+                if isLoading {
+                    startLoadingProgress()
+                } else {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        loadingProgress = 1.0
+                    }
+                    stopLoadingTimer()
+                }
+            }
         }
+    }
+    
+    // MARK: - Loading Progress Helpers
+    private func startLoadingProgress() {
+        loadingTimer?.invalidate()
+        loadingProgress = 0.0
+        loadingTimer = Timer.scheduledTimer(withTimeInterval: 0.06, repeats: true) { timer in
+            // Fill up to 90% while loading, then hold
+            if viewModel.isLoading {
+                let target = 0.90
+                if loadingProgress < target {
+                    loadingProgress = min(target, loadingProgress + 0.015)
+                } else {
+                    loadingProgress = target
+                }
+            } else {
+                // Complete to 100% when finished
+                loadingProgress = 1.0
+                timer.invalidate()
+                loadingTimer = nil
+            }
+        }
+    }
+
+    private func stopLoadingTimer() {
+        loadingTimer?.invalidate()
+        loadingTimer = nil
     }
 }
 
