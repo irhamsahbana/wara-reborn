@@ -172,7 +172,6 @@ struct CaptureView: View {
                     .padding(.top, 32)
                     .padding(.bottom, 4)
                     .frame(maxWidth: .infinity)
-                    .background(Color.black.opacity(0.1))
                     .accessibilityHidden(areControlsHidden)
 
                     VStack(spacing: 8) {
@@ -204,6 +203,8 @@ struct CaptureView: View {
                     )
                     .padding(.bottom, 8)
                 }
+                .frame(maxWidth: .infinity)
+                .background(Color.black.opacity(0.1))
                 
             }
             .frame(maxWidth: .infinity)
