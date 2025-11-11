@@ -2,11 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<key>API_BASE_URL</key>
-<string>$(API_BASE_URL)</string>
-<key>API_SCHEME</key>
-<string>$(API_SCHEME)</string>
-<key>API_HOST</key>
-<string>$(API_HOST)</string>
+	<key>API_BASE_URL</key>
+	<string>$(API_BASE_URL)</string>
+	<key>API_HOST</key>
+	<string>$(API_HOST)</string>
+	<key>API_SCHEME</key>
+	<string>$(API_SCHEME)</string>
 </dict>
 </plist>
