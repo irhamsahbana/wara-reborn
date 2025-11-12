@@ -61,7 +61,7 @@ struct ScanResultView: View {
                             title: viewModel.isLoading && viewModel.data == nil ? "Loading" : "Details",
                             onBack: { onDismiss() },
                             onFavorite: { print("Favorite tapped") },
-                            isFavoriteEnabled: !(viewModel.isLoading && viewModel.data == nil)
+                            isFavoriteEnabled: !(viewModel.isLoading && viewModel.data == nil) && ((viewModel.data?.label?.lowercased() ?? "") == "back")
                         )
                         
                         
@@ -98,6 +98,11 @@ struct ScanResultView: View {
                                 .buttonStyle(PrimaryButtonStyle(backgroundColor: Color("primaryblue")))
                             }
                             .padding()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                        } else if let data = viewModel.data, (data.label?.lowercased() ?? "") != "back" {
+                            ScanResultUnknownView(
+                                onRescan: { onDismiss() }
+                            )
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                         } else {
                             ScrollView{
