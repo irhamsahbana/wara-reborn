@@ -16,11 +16,11 @@ struct ErrorView: View {
             Image(systemName: "exclamationmark.triangle.fill").font(
                 .system(size: 60)
             ).foregroundColor(.yellow)
-            Text("Terjadi Kesalahan").font(.title.bold())
+            Text("Something Went Wrong").font(.title.bold())
             Text(message).font(.body).multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
 
-            Button("Coba Lagi", action: onDismiss)
+            Button("Try Again", action: onDismiss)
                 .font(.headline).foregroundColor(.white).padding()
                 .background(Color.blue).cornerRadius(12)
         }

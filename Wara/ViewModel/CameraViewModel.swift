@@ -11,10 +11,10 @@ import SwiftUI
 import AVFoundation
 
 @MainActor
-/// ViewModel utama untuk proses pemindaian.
-/// Mengorkestrasi kamera, OCR, dan deteksi bahan serta mengelola state UI.
+/// Main ViewModel for the scanning process.
+/// Orchestrates camera, OCR, and ingredient detection, and manages UI state.
 class CameraViewModel: ObservableObject {
-    /// Status pemindaian dan hasil pemrosesan OCR/deteksi.
+    /// Scanning status and OCR/detection processing results.
     enum ScanState {
         case idle
         case capturing
@@ -61,7 +61,7 @@ class CameraViewModel: ObservableObject {
     
     // MARK: - Methods
     func capture() {
-        guard case ScanState.idle = scanState else { return } // Early exit if state are not idle
+        guard case ScanState.idle = scanState else { return } // Early exit if state is not idle
         
         scanState = .capturing
         
@@ -76,13 +76,13 @@ class CameraViewModel: ObservableObject {
     func processImage(_ image: UIImage) {
         scanState = .processing
         
-        // Jalankan operasi async tanpa memblok UI:
-        // - Kita memanggil fungsi async (`ocrService.extractKoreanTextWithBoxes`,
-        //   `detectionService.analyzeIngredients`) dari konteks non-async (callback kamera).
-        // - Menggunakan `Task {}` mengeksekusi pekerjaan berat di luar call stack utama,
-        //   sehingga interaksi UI tetap responsif.
-        // - ViewModel ber-`@MainActor`, jadi pembaruan state seperti `self.scanState`
-        //   akan dieksekusi aman pada MainActor (actor-hopping otomatis).
+        // Run async work without blocking the UI:
+        // - Call async functions (`ocrService.extractKoreanTextWithBoxes`,
+        //   `detectionService.analyzeIngredients`) from a non-async context (camera callback).
+        // - Using `Task {}` executes heavy work off the main call stack,
+        //   keeping UI interactions responsive.
+        // - The ViewModel is `@MainActor`, so state updates like `self.scanState`
+        //   execute safely on the MainActor (automatic actor hopping).
         Task {
             if cameraManager != nil {
                 cameraManager!.stopSession()
@@ -90,11 +90,11 @@ class CameraViewModel: ObservableObject {
             
             do {
                 guard let normalizedImage = image.normalizedImage() else {
-                    self.scanState = .error("Gagal menormalkan gambar.")
+                    self.scanState = .error("Failed to normalize image.")
                     return
                 }
 
-                // Simpan gambar terakhir yang berhasil diproses sebagai fallback
+                // Save the last successfully processed image as a fallback
                 self.lastCapturedImage = normalizedImage
                 
                 let extractedTextsWithBoxes = try await ocrService.extractKoreanTextWithBoxes(
@@ -102,7 +102,7 @@ class CameraViewModel: ObservableObject {
                 )
                 let combinedText = extractedTextsWithBoxes.map { $0.text }.joined(separator: " ")
 
-                // Simpan OCR gabungan untuk dikirim ke API scan
+                // Save combined OCR to be sent to the scan API
                 self.lastCombinedOCRText = combinedText
                 
                 let result = await detectionService.analyzeIngredients(text: combinedText)
@@ -112,7 +112,7 @@ class CameraViewModel: ObservableObject {
                 self.scanState = .error(mapOcrErrorToString(ocrError))
             } catch {
                 self.scanState = .error(
-                    "Terjadi kesalahan tidak dikenal: \(error.localizedDescription)"
+                    "An unknown error occurred: \(error.localizedDescription)"
                 )
             }
         }
@@ -156,9 +156,9 @@ class CameraViewModel: ObservableObject {
     private func mapOcrErrorToString(_ error: OCRError) -> String {
         switch error {
         case .imageProcessingFailed:
-            return "Gagal memproses gambar."
+            return "Failed to process image."
         case .noTextFound:
-            return "Tidak ada teks yang dapat dideteksi."
+            return "No text could be detected."
         }
     }
 }
