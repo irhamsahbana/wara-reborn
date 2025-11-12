@@ -11,6 +11,7 @@ struct CustomAppBar: View {
     var title: String = "Details"
     var onBack: (() -> Void)?
     var onFavorite: (() -> Void)?
+    var isFavoriteEnabled: Bool = true
     
     var body: some View {
         HStack {
@@ -37,18 +38,23 @@ struct CustomAppBar: View {
             
             Spacer()
             
-            // Right Button (Favorite)
-            Button(action: {
-                onFavorite?()
-            }) {
-                Image(systemName: "heart")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundColor(.black)
+            if isFavoriteEnabled {
+                Button(action: {
+                    onFavorite?()
+                }) {
+                    Image(systemName: "heart")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundColor(.black)
+                        .frame(width: 36, height: 36)
+                        .background(
+                            Circle()
+                                .fill(Color.white)
+                        )
+                }
+            } else {
+                Rectangle()
+                    .fill(Color.clear)
                     .frame(width: 36, height: 36)
-                    .background(
-                        Circle()
-                            .fill(Color.white)
-                    )
             }
         }
         .padding(.horizontal, 16)

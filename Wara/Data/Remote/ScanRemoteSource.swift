@@ -45,8 +45,9 @@ class ScanRemoteSource {
     }
 
     /// Memanggil scan API; mengembalikan payload hasil scan.
+    /// Menggunakan endpoint versi terbaru yang mendukung `product_candidates` dan `label`.
     func scanProduct(rawOCRText: String, completion: @escaping (Result<ScanDataDTO, NetworkError>) -> Void) {
-        let url = "\(baseURL)/products/scan"
+        let url = "\(baseURL)/products/scan/v2"
         // Backend requires UUIDv7 for request id; use local generator
         let payload = ScanRequestDTO(id: UUIDv7.generate(), rawOCRText: rawOCRText)
 

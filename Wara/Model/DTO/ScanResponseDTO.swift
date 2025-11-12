@@ -70,6 +70,8 @@ struct ScanDataDTO: Decodable {
     let listedIngridients: [ScanIngredientDTO]
     let notListedIngridients: [ScanIngredientDTO]
     let facility: ScanFacilityDTO?
+    let label: String?
+    let productCandidates: [ProductCandidateDTO]?
 
     enum CodingKeys: String, CodingKey {
         case status
@@ -93,5 +95,7 @@ struct ScanDataDTO: Decodable {
         case listedIngridients = "listed_ingridients"
         case notListedIngridients = "not_listed_ingridients"
         case facility
+        case label
+        case productCandidates = "product_candidates"
     }
 }

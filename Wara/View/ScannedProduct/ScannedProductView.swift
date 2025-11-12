@@ -12,6 +12,10 @@ struct ScannedProductView: View {
     @State private var query: String = ""
     @State private var products: [ScannedProductView.Product] = ScannedProductView.SampleData.products
 
+    init(products: [ScannedProductView.Product] = ScannedProductView.SampleData.products) {
+        _products = State(initialValue: products)
+    }
+
     private var filteredProducts: [ScannedProductView.Product] {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return products }
