@@ -167,17 +167,13 @@ struct ScanResultView: View {
                                     }
 
                                     if !viewModel.listedIngredientsEnglish.isEmpty {
-                                        Text("Listed Ingredients:")
-                                            .font(.subheadline.weight(.semibold))
-                                            .foregroundColor(.primary)
-
                                         Text(viewModel.listedIngredientsEnglish.joined(separator: ", "))
                                             .font(.caption)
                                             .foregroundColor(.primary)
                                     }
 
                                     if !viewModel.notListedIngredientsEnglish.isEmpty {
-                                        Text("Not Listed Ingredients:")
+                                        Text("Unknown Ingredients:")
                                             .font(.subheadline.weight(.semibold))
                                             .foregroundColor(.primary)
 
