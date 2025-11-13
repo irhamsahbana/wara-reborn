@@ -71,7 +71,7 @@ class ScanResultViewModel: ObservableObject {
     var suspectedIngredientsEnglish: [String] {
         guard let d = data else { return [] }
         return d.listedIngridients
-            .filter { $0.category.lowercased() == "doubtful" }
+            .filter { ["doubtful", "not_safe"].contains($0.category.lowercased()) }
             .map { $0.englishName }
     }
 
