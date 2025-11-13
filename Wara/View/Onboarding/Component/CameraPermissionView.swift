@@ -28,16 +28,20 @@ struct CameraPermissionView: View {
             VStack (alignment: .center, spacing: 32) {
                 Spacer()
                 
-                Image(systemName: "camera")
-                    .font(.largeTitle)
+                Image("Onboarding4")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 320)
+                    .frame(height: 200)
+                    .clipped()
                 
                 VStack (spacing: 16) {
-                    Text("Akses kamera dibutuhkan")
+                    Text("Ready to Start Scanning?")
                         .font(.title2)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                     
-                    Text("Ini akan membantumu mengidentifikasi bahan pada produk kemasan Korea dengan lebih cepat")
+                    Text("Allow camera access to scan Korean food packages around you.")
                         .foregroundColor(Color("MutedText"))
                         .font(.callout)
                         .multilineTextAlignment(.center)

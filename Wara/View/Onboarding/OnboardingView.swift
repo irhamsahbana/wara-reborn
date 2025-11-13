@@ -16,31 +16,71 @@ struct OnboardingView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 0) {
                 TabView(selection: $selectedTab) {
                     OnboardingTabView(
-                        title: "Aplikasi Kami",
+                        title: "Check Food Halal Status Easily",
                         imageName: "Onboarding1",
-                        description: "Membantu anda memilih makanan kemasan Korea yang aman dikonsumsi sesuai prinsip Islam"
-                    ).tag(0)
+                        description: "Wara helps you find out whether a Korean packaged food is safe to consume, doubtful, or non-halal — all with just one quick scan."
+                    )
+                    .tag(0)
                     
                     OnboardingTabView(
-                        title: "Cukup Scan Label",
+                        title: "Simply Capture the Product Label",
                         imageName: "Onboarding2",
-                        description: "Wara akan mendeteksi bahan makanan dan menandainya secara otomatis sesuai prinsip Islam"
-                    ).tag(1)
+                        description: "Take a clear photo of the front or back of the Korean food package. Our system will automatically recognize and analyze the ingredients for you."
+                    )
+                    .tag(1)
                     
                     OnboardingTabView(
-                        title: "Ambil Keputusan dengan Cepat",
+                        title: "Get Instant and Accurate Results",
                         imageName: "Onboarding3",
-                        description: "Setiap bahan akan dikategorikan menjadi (Dapat Dikonsumsi, Perlu Ditinjau, dan Perlu Dihindari) untuk membantumu mengambil keputusan"
-                    ).tag(2)
+                        description: "Each product is classified by its halal status: Safe to Consume, Doubtful, or Non-Halal. Helping you make wiser food choices based on the ingredients inside."
+                    )
+                    .tag(2)
                 }
-                .tabViewStyle(PageTabViewStyle())
-                .indexViewStyle(.page(backgroundDisplayMode: .always))
+                .tabViewStyle(.page(indexDisplayMode: .always))
+                .indexViewStyle(.page(backgroundDisplayMode: .interactive))
+                .padding(.vertical, 8)
                 
-                OnboardingButton(selectedTab: $selectedTab, hasCompletedOnboarding: $hasCompletedOnboarding)
+                // Tombol Next/Mulai Sekarang seperti mockup
+                Group {
+                    if selectedTab == 2 {
+                        NavigationLink(
+                            destination: CameraPermissionView(hasCompletedOnboarding: $hasCompletedOnboarding)
+                        ) {
+                            Text("Next")
+                        }
+                        .buttonStyle(
+                            PrimaryButtonStyle(
+                                backgroundColor: Color("primaryblue"),
+                                cornerRadius: 28
+                            )
+                        )
+                        .padding(.horizontal, 16)
+                        .padding(.top, 12)
+                        .padding(.bottom, 24)
+                    } else {
+                        Button("Next") {
+                            withAnimation(.easeInOut) {
+                                selectedTab = min(selectedTab + 1, 2)
+                            }
+                        }
+                        .buttonStyle(
+                            PrimaryButtonStyle(
+                                backgroundColor: Color("primaryblue"),
+                                cornerRadius: 28
+                            )
+                        )
+                        .padding(.horizontal, 16)
+                        .padding(.top, 12)
+                        .padding(.bottom, 24)
+                    }
+                }
             }
+            .background(Color("background").ignoresSafeArea())
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(true)
         }
     }
 }
