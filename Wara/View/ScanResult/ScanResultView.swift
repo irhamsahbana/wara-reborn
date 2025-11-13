@@ -181,6 +181,12 @@ struct ScanResultView: View {
                                     if !viewModel.listedIngredientsDisplay.isEmpty {
                                         coloredIngredientText(viewModel.listedIngredientsDisplay)
                                             .font(.caption)
+                                    } else {
+                                        if !viewModel.englishIngredients.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                            Text(viewModel.englishIngredients)
+                                                .font(.caption)
+                                                .foregroundColor(.primary)
+                                        }
                                     }
 
                                     if !viewModel.notListedIngredientsEnglish.isEmpty {

@@ -101,7 +101,7 @@ struct AlternativeDetailView: View {
                         ResultInfoCard(productType: productType, statusMessage: statusMessage)
                     }
                 }
-                .padding(.top, 16)
+                .padding(.top, 24)
                 .padding(.horizontal, 16)
 
                 // Suspected ingredients (if applicable)
