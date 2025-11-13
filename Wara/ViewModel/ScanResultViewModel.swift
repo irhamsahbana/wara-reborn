@@ -68,6 +68,16 @@ class ScanResultViewModel: ObservableObject {
     var facilityInfo: String { data?.facility?.englishDescription ?? data?.englishFacilityInfo ?? "" }
     var isFacilityInformed: Bool { data?.facility?.isInformed ?? false }
 
+    struct IngredientDisplayItem {
+        let name: String
+        let category: String
+    }
+
+    var listedIngredientsDisplay: [IngredientDisplayItem] {
+        guard let d = data else { return [] }
+        return d.listedIngridients.map { IngredientDisplayItem(name: $0.englishName, category: $0.category.lowercased()) }
+    }
+
     var suspectedIngredientsEnglish: [String] {
         guard let d = data else { return [] }
         return d.listedIngridients

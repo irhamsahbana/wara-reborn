@@ -183,10 +183,9 @@ struct ScanResultView: View {
                                             .foregroundColor(.primary)
                                     }
 
-                                    if !viewModel.listedIngredientsEnglish.isEmpty {
-                                        Text(viewModel.listedIngredientsEnglish.joined(separator: ", "))
+                                    if !viewModel.listedIngredientsDisplay.isEmpty {
+                                        coloredIngredientText(viewModel.listedIngredientsDisplay)
                                             .font(.caption)
-                                            .foregroundColor(.primary)
                                     }
 
                                     if !viewModel.notListedIngredientsEnglish.isEmpty {
@@ -389,6 +388,18 @@ struct ScanResultView: View {
         loadingTimer = nil
     }
 
+    private func coloredIngredientText(_ items: [ScanResultViewModel.IngredientDisplayItem]) -> Text {
+        var result = Text("")
+        for (index, item) in items.enumerated() {
+            let color = item.category == "not_safe" ? Color.red : Color.primary
+            result = result + Text(item.name).foregroundColor(color)
+            if index < items.count - 1 {
+                result = result + Text(", ").foregroundColor(.secondary)
+            }
+        }
+        return result
+    }
+    
     
 }
 
