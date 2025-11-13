@@ -80,34 +80,36 @@ struct RemoteImageCarouselView: View {
                 .padding(.bottom, 8)
             }
 
-            HStack {
-                Button(action: {
-                    withAnimation {
-                        guard !imageURLs.isEmpty else { return }
-                        currentIndex = (currentIndex - 1 + imageURLs.count) % imageURLs.count
+            if imageURLs.count > 1 {
+                HStack {
+                    Button(action: {
+                        withAnimation {
+                            guard !imageURLs.isEmpty else { return }
+                            currentIndex = (currentIndex - 1 + imageURLs.count) % imageURLs.count
+                        }
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.title2)
+                            .foregroundColor(.black)
+                            .padding()
                     }
-                }) {
-                    Image(systemName: "chevron.left")
-                        .font(.title2)
-                        .foregroundColor(.black)
-                        .padding()
-                }
 
-                Spacer()
+                    Spacer()
 
-                Button(action: {
-                    withAnimation {
-                        guard !imageURLs.isEmpty else { return }
-                        currentIndex = (currentIndex + 1) % imageURLs.count
+                    Button(action: {
+                        withAnimation {
+                            guard !imageURLs.isEmpty else { return }
+                            currentIndex = (currentIndex + 1) % imageURLs.count
+                        }
+                    }) {
+                        Image(systemName: "chevron.right")
+                            .font(.title2)
+                            .foregroundColor(.black)
+                            .padding()
                     }
-                }) {
-                    Image(systemName: "chevron.right")
-                        .font(.title2)
-                        .foregroundColor(.black)
-                        .padding()
                 }
+                .padding(.horizontal, 12)
             }
-            .padding(.horizontal, 12)
 
             VStack {
                 Spacer()

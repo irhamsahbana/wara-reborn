@@ -44,33 +44,34 @@ struct ImageCarouselView: View {
                     .padding(.bottom, 8)
             }
             
-            // Left & right arrows
-            HStack {
-                Button(action: {
-                    withAnimation {
-                        currentIndex = (currentIndex - 1 + images.count) % images.count
+            if images.count > 1 {
+                HStack {
+                    Button(action: {
+                        withAnimation {
+                            currentIndex = (currentIndex - 1 + images.count) % images.count
+                        }
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.title2)
+                            .foregroundColor(.black)
+                            .padding()
                     }
-                }) {
-                    Image(systemName: "chevron.left")
-                        .font(.title2)
-                        .foregroundColor(.black)
-                        .padding()
-                }
-                
-                Spacer()
-                
-                Button(action: {
-                    withAnimation {
-                        currentIndex = (currentIndex + 1) % images.count
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        withAnimation {
+                            currentIndex = (currentIndex + 1) % images.count
+                        }
+                    }) {
+                        Image(systemName: "chevron.right")
+                            .font(.title2)
+                            .foregroundColor(.black)
+                            .padding()
                     }
-                }) {
-                    Image(systemName: "chevron.right")
-                        .font(.title2)
-                        .foregroundColor(.black)
-                        .padding()
                 }
+                .padding(.horizontal, 12)
             }
-            .padding(.horizontal, 12)
             
             VStack {
                 Spacer()
