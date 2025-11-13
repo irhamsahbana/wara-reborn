@@ -15,7 +15,7 @@ struct ProcessingView: View {
                 ProgressView().scaleEffect(2).progressViewStyle(
                     CircularProgressViewStyle(tint: .white)
                 )
-                Text("Menganalisa Gambar...").font(.headline).foregroundColor(
+                Text("Analyzing Image...").font(.headline).foregroundColor(
                     .white
                 )
             }
