@@ -41,6 +41,7 @@ struct ScanResultView: View {
 
     @StateObject private var viewModel = ScanResultViewModel()
     @State private var showSheet = false
+    @State private var showAlternativeDetail = false
     @State private var loadingProgress: Double = 0.0
     @State private var loadingTimer: Timer?
     
@@ -286,6 +287,11 @@ struct ScanResultView: View {
                                                             print("Favorited \(item.id)")
                                                         }
                                                     )
+                                                    .onTapGesture {
+                                                        viewModel.loadAlternativeDetail(id: item.id, isKmf: item.isKmf) { _ in
+                                                            showAlternativeDetail = true
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -339,6 +345,23 @@ struct ScanResultView: View {
         }
         .sheet(isPresented: $showSheet) {
             BottomSheetContributeView(isPresented: $showSheet)
+        }
+        .sheet(isPresented: $showAlternativeDetail) {
+            VStack(spacing: 12) {
+                if viewModel.isLoadingAlternativeDetail {
+                    ProgressView()
+                        .padding()
+                } else if let detail = viewModel.selectedAlternativeDetailData {
+                    AlternativeDetailView(detail: detail, fallbackImage: fallbackImage)
+                } else {
+                    Text(viewModel.alternativeDetailErrorMessage ?? "Failed to load alternative product")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .padding()
+                }
+            }
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
         }
         .task {
             await viewModel.scan(rawOCRText: rawOCRText)

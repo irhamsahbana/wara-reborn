@@ -15,6 +15,10 @@ class ScanResultViewModel: ObservableObject {
     @Published var data: ScanDataDTO?
     @Published var alternativeItems: [AlternativeProductItemDTO] = []
     @Published var isLoadingAlternatives: Bool = false
+    @Published var selectedAlternativeDetail: AlternativeProductItemDTO?
+    @Published var isLoadingAlternativeDetail: Bool = false
+    @Published var alternativeDetailErrorMessage: String? = nil
+    @Published var selectedAlternativeDetailData: AlternativeProductDetailDTO?
 
     private let remote = ScanRemoteSource.shared
     private let altRemote = AlternativeRemoteSource.shared
@@ -154,6 +158,39 @@ class ScanResultViewModel: ObservableObject {
                 case .failure:
                     self.alternativeItems = []
                     self.isLoadingAlternatives = false
+                }
+            }
+        }
+    }
+
+    func loadAlternativeDetail(id: String, isKmf: Bool, completion: ((Result<AlternativeProductItemDTO, NetworkError>) -> Void)? = nil) {
+        let categoryParam = isKmf ? "kmf" : "non_kmf"
+        isLoadingAlternativeDetail = true
+        alternativeDetailErrorMessage = nil
+        altRemote.fetchAlternativeDetail(id: id, category: categoryParam) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let item):
+                    self.selectedAlternativeDetail = item
+                    self.isLoadingAlternativeDetail = false
+                case .failure(let err):
+                    self.selectedAlternativeDetail = nil
+                    self.alternativeDetailErrorMessage = err.localizedDescription
+                    self.isLoadingAlternativeDetail = false
+                }
+                completion?(result)
+            }
+        }
+
+        altRemote.fetchAlternativeDetailData(id: id, category: categoryParam) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let detail):
+                    self.selectedAlternativeDetailData = detail
+                case .failure:
+                    self.selectedAlternativeDetailData = nil
                 }
             }
         }
