@@ -107,7 +107,7 @@ struct CaptureView: View {
                     Text(
                         viewModel.isIngredientLabelDectected
                         ? "Ingredient Label Detected"
-                        : "Please Find Ingredient Label"
+                        : "Scan Korean packaged food"
                     )
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
