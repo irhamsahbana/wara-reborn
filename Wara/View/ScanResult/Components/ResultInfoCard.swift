@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ResultInfoCard: View {
     let productType: ProductType
+    let statusMessage: String
     
     struct InfoCard: View {
         let title: String
@@ -57,7 +58,7 @@ struct ResultInfoCard: View {
             if(productType == .HALAL){
                 InfoCard(
                     title: ProductType.HALAL.rawValue,
-                    description: "No haram ingredient found",
+                    description: statusMessage.isEmpty ? "No haram ingredient found" : statusMessage,
                     color: Color("green2"),
                     icon: "checkmark"
                 )
@@ -66,7 +67,7 @@ struct ResultInfoCard: View {
             if(productType == .SAFE_TO_CONSUME){
                 InfoCard(
                     title: ProductType.SAFE_TO_CONSUME.rawValue,
-                    description: "No haram ingredient found",
+                    description: statusMessage.isEmpty ? "No haram ingredient found" : statusMessage,
                     color: Color("green2"),
                     icon: "checkmark"
                 )
@@ -75,7 +76,7 @@ struct ResultInfoCard: View {
             if(productType == .DOUBTFULL){
                 InfoCard(
                     title: ProductType.DOUBTFULL.rawValue,
-                    description: "Requires further checking",
+                    description: statusMessage.isEmpty ? "Requires further checking" : statusMessage,
                     color: Color("yellow"),
                     icon: "exclamationmark"
                 )
@@ -84,7 +85,7 @@ struct ResultInfoCard: View {
             if(productType == .NON_HALAL){
                 InfoCard(
                     title: ProductType.NON_HALAL.rawValue,
-                    description: "Contains forbidden ingredients",
+                    description: statusMessage.isEmpty ? "Contains forbidden ingredients" : statusMessage,
                     color: Color("red"),
                     icon: "xmark"
                 )
@@ -95,7 +96,7 @@ struct ResultInfoCard: View {
 
 #Preview {
     ResultInfoCard(
-        productType: .NON_HALAL
-        
+        productType: .NON_HALAL,
+        statusMessage: "Contains forbidden ingredients"
     )
 }

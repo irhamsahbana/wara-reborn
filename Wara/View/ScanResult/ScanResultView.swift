@@ -132,7 +132,7 @@ struct ScanResultView: View {
                                             }
                                         }
 
-                                        ResultInfoCard(productType: viewModel.productType)
+                                        ResultInfoCard(productType: viewModel.productType, statusMessage: viewModel.statusMessage)
                                     }
                                 }
                                 .padding(.top, 16)
@@ -176,12 +176,6 @@ struct ScanResultView: View {
                                     Text("Ingredients:")
                                         .font(.title3.weight(.semibold))
                                         .foregroundColor(.primary)
-                                    
-                                    if !viewModel.englishIngredients.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                                        Text(viewModel.englishIngredients)
-                                            .font(.caption)
-                                            .foregroundColor(.primary)
-                                    }
 
                                     if !viewModel.listedIngredientsDisplay.isEmpty {
                                         coloredIngredientText(viewModel.listedIngredientsDisplay)

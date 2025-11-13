@@ -67,6 +67,7 @@ class ScanResultViewModel: ObservableObject {
     var englishIngredients: String { data?.englishIngredients ?? "" }
     var facilityInfo: String { data?.facility?.englishDescription ?? data?.englishFacilityInfo ?? "" }
     var isFacilityInformed: Bool { data?.facility?.isInformed ?? false }
+    var statusMessage: String { data?.statusMessage ?? "" }
 
     struct IngredientDisplayItem {
         let name: String

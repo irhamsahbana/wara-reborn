@@ -50,6 +50,7 @@ struct ScanDataDTO: Decodable {
     // Status keseluruhan hasil scan dari backend
     // Nilai yang diharapkan: kmf_certified, no_haram, doubtful, haram
     let status: String
+    let statusMessage: String
     let englishName: String
     let koreanName: String
     let koreanPronunciation: String?
@@ -75,6 +76,7 @@ struct ScanDataDTO: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case status
+        case statusMessage = "status_message"
         case englishName = "english_name"
         case koreanName = "korean_name"
         case koreanPronunciation = "korean_pronunciation"
