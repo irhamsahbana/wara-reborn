@@ -9,7 +9,6 @@ import PhotosUI
 import SwiftUI
 
 struct CaptureView: View {
-    @Environment(\.dismiss) private var dismiss
     
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel: CameraViewModel
@@ -43,19 +42,7 @@ struct CaptureView: View {
            
             VStack {
                 ZStack {
-                    // Back button
                     HStack {
-                        Button(action: {
-                            dismiss()
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.title3)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.white)
-                                .padding(12)
-                                .background(Color.black.opacity(0.5))
-                                .clipShape(Circle())
-                        }
                         Spacer()
                         Button(action: {
                             withAnimation {

@@ -24,7 +24,7 @@ struct WaraApp: App {
     var body: some Scene {
         WindowGroup {
             if hasCompletedOnboarding {
-                BaseView()
+                CaptureView()
             } else {
                 OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
             }
