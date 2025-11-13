@@ -145,9 +145,26 @@ struct ScanResultView: View {
                                             .font(.title3.weight(.semibold))
                                             .foregroundColor(.primary)
 
-                                        Text(viewModel.suspectedIngredientsEnglish.joined(separator: ", "))
-                                            .font(.body)
-                                            .foregroundColor(.primary)
+                                        HStack(alignment: .firstTextBaseline, spacing: 6) {
+                                            Text(viewModel.suspectedIngredientsEnglish.joined(separator: ", "))
+                                                .font(.body)
+                                                .foregroundColor(.primary)
+                                                .lineLimit(2)
+                                                .truncationMode(.tail)
+
+                                            if !viewModel.suspectedIngredientsEnglish.isEmpty {
+                                                NavigationLink(
+                                                    destination: SuspectedIngredientsView(
+                                                        ingredients: viewModel.data?.listedIngridients ?? []
+                                                    )
+                                                ) {
+                                                    Text("Learn More")
+                                                        .font(.subheadline.weight(.semibold))
+                                                        .foregroundColor(Color("primaryblue"))
+                                                }
+                                                .padding(.leading, 6)
+                                            }
+                                        }
                                     }
                                 }
                             }
