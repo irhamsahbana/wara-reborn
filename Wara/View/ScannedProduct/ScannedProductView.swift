@@ -10,20 +10,8 @@ import SwiftUI
 struct ScannedProductView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var query: String = ""
-    @State private var products: [ScannedProductView.Product] = ScannedProductView.SampleData.products
-
-    init(products: [ScannedProductView.Product] = ScannedProductView.SampleData.products) {
-        _products = State(initialValue: products)
-    }
-
-    private var filteredProducts: [ScannedProductView.Product] {
-        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return products }
-        return products.filter { product in
-            product.name.localizedCaseInsensitiveContains(trimmed) ||
-            product.category.localizedCaseInsensitiveContains(trimmed)
-        }
-    }
+    @StateObject private var viewModel = ScannedProductsViewModel()
+    @State private var searchWorkItem: DispatchWorkItem? = nil
 
     var body: some View {
         ScrollView {
@@ -31,7 +19,7 @@ struct ScannedProductView: View {
                 header
                 searchBar
 
-                if filteredProducts.isEmpty {
+                if viewModel.items.isEmpty && !viewModel.isLoading {
                     Spacer()
                     Spacer()
                     Spacer()
@@ -43,8 +31,11 @@ struct ScannedProductView: View {
                         columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
                         spacing: 12
                     ) {
-                        ForEach(filteredProducts) { product in
-                            ScannedProductView.ProductCard(product: product)
+                        ForEach(viewModel.items) { item in
+                            ScannedProductView.ProductCard(item: item)
+                                .onAppear {
+                                    viewModel.loadNextPageIfNeeded(currentItemId: item.id)
+                                }
                         }
                     }
                     .padding(.horizontal, 12)
@@ -55,6 +46,10 @@ struct ScannedProductView: View {
         .navigationTitle("")
         .navigationBarHidden(true)
         .background(Color("background").ignoresSafeArea())
+        .onAppear {
+            viewModel.configureDefaultPaginate(20)
+            viewModel.resetAndLoadInitial(query: "")
+        }
     }
 
     private var header: some View {
@@ -98,6 +93,14 @@ struct ScannedProductView: View {
                 .textFieldStyle(.plain)
                 .font(.body.weight(.medium))
                 .foregroundColor(.gray)
+                .onChange(of: query) { newValue in
+                    searchWorkItem?.cancel()
+                    let work = DispatchWorkItem { [weak viewModel] in
+                        viewModel?.resetAndLoadInitial(query: newValue)
+                    }
+                    searchWorkItem = work
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: work)
+                }
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
@@ -132,52 +135,8 @@ private extension ScannedProductView {
 // MARK: - Nested Types & Components
 
 extension ScannedProductView {
-    enum ProductStatus {
-        case safe
-        case doubtful
-        case halal
-
-        var borderColor: Color {
-            switch self {
-            case .safe, .halal: return Color.green
-            case .doubtful: return Color.yellow
-            }
-        }
-
-        var labelText: String {
-            switch self {
-            case .safe: return "Safe"
-            case .doubtful: return "Doubtful"
-            case .halal: return "Halal KMF"
-            }
-        }
-
-        var labelIcon: String {
-            switch self {
-            case .safe: return "checkmark.circle.fill"
-            case .doubtful: return "exclamationmark.triangle.fill"
-            case .halal: return "leaf.fill"
-            }
-        }
-
-        var labelColor: Color {
-            switch self {
-            case .safe, .halal: return Color.green
-            case .doubtful: return Color.orange
-            }
-        }
-    }
-
-    struct Product: Identifiable {
-        let id = UUID()
-        let name: String
-        let category: String
-        let status: ProductStatus
-        let imageName: String?
-    }
-
     struct ProductCard: View {
-        let product: Product
+        let item: ScannedProductsViewModel.ScannedProductGridItem
 
         var body: some View {
             VStack(alignment: .leading, spacing: 8) {
@@ -187,10 +146,25 @@ extension ScannedProductView {
                         .frame(height: 90)
                         .overlay(
                             Group {
-                                if let name = product.imageName, !name.isEmpty {
-                                    Image(name)
-                                        .resizable()
-                                        .scaledToFit()
+                                if let url = item.imageURL {
+                                    AsyncImage(url: url) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            ProgressView()
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .scaledToFit()
+                                        case .failure:
+                                            Image(systemName: "photo")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .foregroundColor(.secondary)
+                                                .padding(20)
+                                        @unknown default:
+                                            EmptyView()
+                                        }
+                                    }
                                 } else {
                                     Image(systemName: "photo")
                                         .resizable()
@@ -202,45 +176,32 @@ extension ScannedProductView {
                         )
                 }
 
-                Text(product.name)
+                Text(item.englishName)
                     .font(.subheadline.weight(.medium))
                     .foregroundColor(.primary)
                     .lineLimit(2)
 
-                Text(product.category)
+                Text(item.category)
                     .font(.caption)
                     .foregroundColor(.primary)
                 
                 Spacer(minLength: 0)
 
                 HStack(spacing: 6) {
-                    Image(systemName: product.status.labelIcon)
-                        .foregroundColor(product.status.labelColor)
-                    Text(product.status.labelText)
+                    Image(systemName: item.status.labelIcon)
+                        .foregroundColor(item.status.labelColor)
+                    Text(item.status.rawValue)
                         .font(.caption)
-                        .foregroundColor(product.status.labelColor)
+                        .foregroundColor(item.status.labelColor)
                     Spacer()
                 }
             }
             .padding(10)
             .background(
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(product.status.borderColor, lineWidth: 2)
+                    .stroke(item.status.borderColor, lineWidth: 2)
             )
         }
-    }
-
-    enum SampleData {
-        static let products: [Product] = [
-//            Product(name: "Korean Snack", category: "Snack", status: .safe, imageName: nil),
-//            Product(name: "Strawberry Sticky Rice Cake", category: "Rice Cake", status: .halal, imageName: nil),
-//            Product(name: "Korean Snack", category: "Snack", status: .doubtful, imageName: nil),
-//            Product(name: "Korean Snack", category: "Snack", status: .doubtful, imageName: nil),
-//            Product(name: "Korean Snack", category: "Snack", status: .safe, imageName: nil),
-//            Product(name: "Strawberry Sticky Rice Cake", category: "Rice Cake", status: .halal,  imageName: nil),
-//            Product(name: "Korean Snack", category: "Snack", status: .doubtful,  imageName: nil),
-//            Product(name: "Korean Snack", category: "Snack", status: .doubtful,  imageName: nil)
-        ]
     }
 }
 

@@ -1,20 +1,18 @@
 //
-//  CategoryRemoteSource.swift
+//  ScanResultsRemoteSource.swift
 //  Wara
 //
-//  Created by Meow on 24/10/25.
+//  Created by Meow on 18/11/25
 //
 
 import Foundation
-import Alamofire
 
-/// Sumber data remote untuk operasi pengguna (create/fetch).
-/// Menggunakan `HttpClient` dan membaca `API_SCHEME`/`API_HOST` dari Info.plist.
-class UserRemoteSource {
-    static let shared = UserRemoteSource()
+final class ScanResultsRemoteSource {
+    static let shared = ScanResultsRemoteSource()
     private init() {}
 
     private let httpClient = HttpClient.shared
+
     private var baseURL: String {
         let schemeRaw = (Bundle.main.object(forInfoDictionaryKey: "API_SCHEME") as? String) ?? ""
         let hostRaw = (Bundle.main.object(forInfoDictionaryKey: "API_HOST") as? String) ?? ""
@@ -42,36 +40,35 @@ class UserRemoteSource {
         }
         return url.absoluteString
     }
-    
-    // Respons memakai ApiResponseDTO<T> dan EmptyDTO yang disatukan di Model/DTO
 
-    /// Create user in backend. No X-User-ID header, only body { user_id }
-    func createUser(payload: CreateUserRequestDTO, completion: @escaping (Result<Void, NetworkError>) -> Void) {
-        let url = "\(baseURL)/users"
+    func fetchScanResults(query: String?, page: Int, paginate: Int, completion: @escaping (Result<ScanResultsPayloadDTO, NetworkError>) -> Void) {
+        var url = "\(baseURL)/products/scan-results"
+        var queries: [String] = []
+        if let q = query?.trimmingCharacters(in: .whitespacesAndNewlines), !q.isEmpty {
+            let encoded = q.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? q
+            queries.append("q=\(encoded)")
+        }
+        queries.append("page=\(page)")
+        queries.append("paginate=\(paginate)")
+        if !queries.isEmpty {
+            url += "?" + queries.joined(separator: "&")
+        }
+
         httpClient.request(url: url,
-                           method: .post,
-                           parameters: payload,
-                           includeUserHeader: false,
-                           completion: { (result: Result<ApiResponseDTO<EmptyDTO>, NetworkError>) in
+                           method: .get,
+                           parameters: nil as String?,
+                           includeUserHeader: true,
+                           completion: { (result: Result<ApiResponseDTO<ScanResultsPayloadDTO>, NetworkError>) in
             switch result {
             case .success(let envelope):
-                if envelope.success == false {
-                    completion(.failure(.custom(envelope.message ?? "Unknown error")))
+                if let payload = envelope.data {
+                    completion(.success(payload))
                 } else {
-                    completion(.success(()))
+                    completion(.failure(.custom(envelope.message ?? "Empty payload")))
                 }
             case .failure(let err):
                 completion(.failure(err))
             }
         })
-    }
-
-    // Example-only: keep a fetch method using JSONPlaceholder to avoid breaking samples
-    func fetchUsers(completion: @escaping (Result<[User], NetworkError>) -> Void) {
-        let url = "https://jsonplaceholder.typicode.com/posts"
-        httpClient.request(url: url,
-                           method: .get,
-                           parameters: nil as String?,
-                           completion: completion)
     }
 }

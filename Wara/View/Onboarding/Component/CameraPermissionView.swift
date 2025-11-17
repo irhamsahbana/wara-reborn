@@ -51,7 +51,7 @@ struct CameraPermissionView: View {
             }
             
             Button(action: requestCameraPermission) {
-                Text("Lanjutkan")
+                Text("Continue")
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
                     .padding()

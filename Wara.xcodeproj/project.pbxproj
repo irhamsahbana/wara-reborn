@@ -390,6 +390,8 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need to access your camera to scan ingredients label";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need to access your library for importing photos to scanning ingredients";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "We need local network access to connect to the development server";
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsLocalNetworking = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;

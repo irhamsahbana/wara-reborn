@@ -46,6 +46,16 @@ class HttpClient {
                 headers.add(name: "X-User-ID", value: userId)
             }
 
+            #if DEBUG
+            let methodName = method.rawValue
+            if includeUserHeader {
+                let xuid = UserDefaults.standard.string(forKey: "userId") ?? ""
+                print("[HTTP] \(methodName) \(url) X-User-ID=\(xuid)")
+            } else {
+                print("[HTTP] \(methodName) \(url)")
+            }
+            #endif
+
             AF.request(url,
                        method: method,
                        parameters: alamofireParameters,
