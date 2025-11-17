@@ -32,10 +32,19 @@ struct ScannedProductView: View {
                         spacing: 12
                     ) {
                         ForEach(viewModel.items) { item in
-                            ScannedProductView.ProductCard(item: item)
-                                .onAppear {
-                                    viewModel.loadNextPageIfNeeded(currentItemId: item.id)
-                                }
+                            NavigationLink(
+                                destination: ScanResultView(
+                                    onDismiss: { dismiss() },
+                                    rawOCRText: "",
+                                    fallbackImage: nil,
+                                    scanResultId: item.id
+                                )
+                            ) {
+                                ScannedProductView.ProductCard(item: item)
+                            }
+                            .onAppear {
+                                viewModel.loadNextPageIfNeeded(currentItemId: item.id)
+                            }
                         }
                     }
                     .padding(.horizontal, 12)

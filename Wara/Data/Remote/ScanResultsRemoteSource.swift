@@ -71,4 +71,25 @@ final class ScanResultsRemoteSource {
             }
         })
     }
+
+    func fetchScanResultDetail(id: String, completion: @escaping (Result<ScanDataDTO, NetworkError>) -> Void) {
+        let encodedId = id.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? id
+        let url = "\(baseURL)/products/scan-results/\(encodedId)"
+        httpClient.request(url: url,
+                           method: .get,
+                           parameters: nil as String?,
+                           includeUserHeader: true,
+                           completion: { (result: Result<ApiResponseDTO<ScanDataDTO>, NetworkError>) in
+            switch result {
+            case .success(let envelope):
+                if let data = envelope.data {
+                    completion(.success(data))
+                } else {
+                    completion(.failure(.custom(envelope.message ?? "Empty payload")))
+                }
+            case .failure(let err):
+                completion(.failure(err))
+            }
+        })
+    }
 }

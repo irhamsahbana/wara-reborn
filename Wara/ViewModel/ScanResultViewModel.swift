@@ -21,6 +21,7 @@ class ScanResultViewModel: ObservableObject {
     @Published var selectedAlternativeDetailData: AlternativeProductDetailDTO?
 
     private let remote = ScanRemoteSource.shared
+    private let scanResultsRemote = ScanResultsRemoteSource.shared
     private let altRemote = AlternativeRemoteSource.shared
 
     // MARK: - Derived UI properties
@@ -124,6 +125,26 @@ class ScanResultViewModel: ObservableObject {
 
         await withCheckedContinuation { continuation in
             remote.scanProduct(rawOCRText: rawOCRText) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let payload):
+                        self.data = payload
+                        self.loadAlternatives()
+                    case .failure(let err):
+                        self.errorMessage = err.localizedDescription
+                    }
+                    self.isLoading = false
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
+    func loadScanResultById(_ id: String) async {
+        isLoading = true
+        errorMessage = nil
+        await withCheckedContinuation { continuation in
+            scanResultsRemote.fetchScanResultDetail(id: id) { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let payload):

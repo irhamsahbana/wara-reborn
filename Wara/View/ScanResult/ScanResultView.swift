@@ -38,6 +38,8 @@ struct ScanResultView: View {
     let onDismiss: () -> Void
     let rawOCRText: String
     let fallbackImage: UIImage?
+    let scanResultId: String?
+    @Environment(\.dismiss) private var dismiss
 
     @StateObject private var viewModel = ScanResultViewModel()
     @State private var showSheet = false
@@ -45,12 +47,19 @@ struct ScanResultView: View {
     @State private var loadingProgress: Double = 0.0
     @State private var loadingTimer: Timer?
     
+    init(onDismiss: @escaping () -> Void, rawOCRText: String, fallbackImage: UIImage?, scanResultId: String? = nil) {
+        self.onDismiss = onDismiss
+        self.rawOCRText = rawOCRText
+        self.fallbackImage = fallbackImage
+        self.scanResultId = scanResultId
+    }
+
     var body: some View {
         Group {
             if let data = viewModel.data, data.label?.lowercased() == "front" {
                 ScanResultFrontView(
-                    onBack: { onDismiss() },
-                    onCaptureBack: { onDismiss() },
+                    onBack: { onDismiss(); dismiss() },
+                    onCaptureBack: { onDismiss(); dismiss() },
                     imageURL: URL(string: data.frontCoverURL ?? ""),
                     fallbackImage: fallbackImage,
                     candidates: data.productCandidates ?? []
@@ -60,7 +69,7 @@ struct ScanResultView: View {
                     VStack(spacing: 0){
                         CustomAppBar(
                             title: viewModel.isLoading && viewModel.data == nil ? "Loading" : "Details",
-                            onBack: { onDismiss() },
+                            onBack: { onDismiss(); dismiss() },
                             onFavorite: { print("Favorite tapped") },
                             isFavoriteEnabled: !(viewModel.isLoading && viewModel.data == nil) && ((viewModel.data?.label?.lowercased() ?? "") == "back")
                         )
@@ -370,8 +379,14 @@ struct ScanResultView: View {
             .presentationDragIndicator(.visible)
         }
         .task {
-            await viewModel.scan(rawOCRText: rawOCRText)
+            if let id = scanResultId, !id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                await viewModel.loadScanResultById(id)
+            } else {
+                await viewModel.scan(rawOCRText: rawOCRText)
+            }
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
         .onChange(of: viewModel.isLoading) { isLoading in
             if isLoading {
                 startLoadingProgress()
