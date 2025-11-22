@@ -60,7 +60,7 @@ struct ScanResultView: View {
                 ScanResultFrontView(
                     onBack: { onDismiss(); dismiss() },
                     onCaptureBack: { onDismiss(); dismiss() },
-                    imageURL: URL(string: data.frontCoverURL ?? ""),
+                    imageURL: viewModel.frontImageURL,
                     fallbackImage: fallbackImage,
                     candidates: data.productCandidates ?? []
                 )

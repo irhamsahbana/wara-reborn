@@ -18,9 +18,19 @@ struct AlternativeDetailView: View {
     private var isKMF: Bool { detail.isKmf ?? false }
 
     private var imageURLs: [URL] {
-        [detail.frontCoverURL, detail.backCoverURL]
+        let front = sanitize(detail.frontCoverURL)
+        let back = sanitize(detail.backCoverURL)
+        return [front, back]
             .compactMap { $0 }
             .compactMap { URL(string: $0) }
+    }
+
+    private func sanitize(_ raw: String?) -> String? {
+        guard var s = raw?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty else { return nil }
+        s = s.replacingOccurrences(of: "`", with: "")
+        s = s.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !s.isEmpty else { return nil }
+        return s
     }
 
     private var englishName: String { detail.englishName ?? "" }

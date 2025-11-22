@@ -55,9 +55,21 @@ class ScanResultViewModel: ObservableObject {
 
     var imageURLs: [URL] {
         guard let d = data else { return [] }
-        return [d.frontCoverURL, d.backCoverURL]
+        let front = sanitizeURLString(d.frontCoverURL)
+        let back = sanitizeURLString(d.backCoverURL)
+        return [front, back]
             .compactMap { $0 }
             .compactMap { URL(string: $0) }
+    }
+
+    var frontImageURL: URL? {
+        guard let s = sanitizeURLString(data?.frontCoverURL) else { return nil }
+        return URL(string: s)
+    }
+
+    var backImageURL: URL? {
+        guard let s = sanitizeURLString(data?.backCoverURL) else { return nil }
+        return URL(string: s)
     }
 
     var englishName: String { data?.englishName ?? "" }
@@ -245,5 +257,13 @@ class ScanResultViewModel: ObservableObject {
                 }
             }
         }
+    }
+
+    private func sanitizeURLString(_ raw: String?) -> String? {
+        guard var s = raw?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty else { return nil }
+        s = s.replacingOccurrences(of: "`", with: "")
+        s = s.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !s.isEmpty else { return nil }
+        return s
     }
 }
