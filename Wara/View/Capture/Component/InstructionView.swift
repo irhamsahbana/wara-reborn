@@ -19,13 +19,13 @@ struct OnboardingSlide: Identifiable {
 let slides = [
     OnboardingSlide(
         imageName: "inst1",
-        title: "1. Find The Ingredients List",
-        description: "Look for the section on the package that lists all ingredients usually found on the back."
+        title: "1. Scan Front or Back of the Packaging",
+        description: "Take a clear photo of the front or back of the Korean food package. Wara system will automatically try to recognize the product."
     ),
     OnboardingSlide(
         imageName: "inst2",
-        title: "2. Align Your Camera",
-        description: "Point your camera at the text. Ensure it's sharp and easy to read under good light."
+        title: "2. Identify the Product",
+        description: "If the system recognizes it, select the correct product match. If not found, you’ll be asked to scan the back of the package."
     ),
     OnboardingSlide(
         imageName: "inst3",
