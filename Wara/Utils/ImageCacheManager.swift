@@ -15,6 +15,7 @@ actor ImageCacheManager {
     private let memoryCache = NSCache<NSString, UIImage>()
     private let fileManager = FileManager.default
     private let cacheDirectory: URL
+    private let ttl: TimeInterval = 14 * 24 * 60 * 60
 
     private init() {
         let base = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
@@ -28,7 +29,7 @@ actor ImageCacheManager {
             }
         }
         memoryCache.countLimit = 100
-        memoryCache.totalCostLimit = 50 * 1024 * 1024 // ~50MB
+        memoryCache.totalCostLimit = 50 * 1024 * 1024
     }
 
     /// Generates a stable SHA256 key using the product id and URL string.
@@ -45,8 +46,16 @@ actor ImageCacheManager {
         }
 
         let fileURL = cacheDirectory.appendingPathComponent(key)
+        if let attrs = try? fileManager.attributesOfItem(atPath: fileURL.path),
+           let mod = attrs[.modificationDate] as? Date {
+            let age = Date().timeIntervalSince(mod)
+            if age > ttl {
+                try? fileManager.removeItem(at: fileURL)
+                return nil
+            }
+        }
         if let data = try? Data(contentsOf: fileURL), let img = UIImage(data: data) {
-            memoryCache.setObject(img, forKey: key as NSString)
+            memoryCache.setObject(img, forKey: key as NSString, cost: data.count)
             return img
         }
         return nil
@@ -61,7 +70,7 @@ actor ImageCacheManager {
             // Silently ignore disk write errors to avoid crashing.
         }
         if let img = UIImage(data: data) {
-            memoryCache.setObject(img, forKey: key as NSString)
+            memoryCache.setObject(img, forKey: key as NSString, cost: data.count)
         }
     }
 
