@@ -154,34 +154,7 @@ extension ScannedProductView {
                         .fill(Color(.systemGray6))
                         .frame(height: 90)
                         .overlay(
-                            Group {
-                                if let url = item.imageURL {
-                                    AsyncImage(url: url) { phase in
-                                        switch phase {
-                                        case .empty:
-                                            ProgressView()
-                                        case .success(let image):
-                                            image
-                                                .resizable()
-                                                .scaledToFit()
-                                        case .failure:
-                                            Image(systemName: "photo")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .foregroundColor(.secondary)
-                                                .padding(20)
-                                        @unknown default:
-                                            EmptyView()
-                                        }
-                                    }
-                                } else {
-                                    Image(systemName: "photo")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .foregroundColor(.secondary)
-                                        .padding(20)
-                                }
-                            }
+                            CachedRemoteImageView(id: item.id, url: item.imageURL, contentMode: .fit, cornerRadius: 8, placeholderColor: Color(.systemGray6))
                         )
                 }
 
