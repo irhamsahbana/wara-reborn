@@ -11,8 +11,8 @@ struct CustomSegmentedControl: View {
     @Binding var selectedTab: TabType
 
     enum TabType: String, CaseIterable {
-        case favorite = "Favorite Product"
-        case scanned = "Scanned Product"
+        case favorite = "Favorite Products"
+        case saved = "Saved Products"
     }
 
     var body: some View {

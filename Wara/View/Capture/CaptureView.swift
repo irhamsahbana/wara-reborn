@@ -165,7 +165,7 @@ struct CaptureView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "document.viewfinder.fill")
                                 .foregroundColor(.white)
-                            Text("Scanned Product")
+                            Text("Saved Products")
                                 .font(.headline.weight(.medium))
                                 .foregroundColor(.white)
                         }

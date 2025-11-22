@@ -95,9 +95,9 @@ struct ScannedProductView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.gray)
             TextField(
-                "Search your scanned product",
+                "Search your saved products",
                 text: $query,
-                prompt: Text("Search your scanned product").foregroundColor(.gray)
+                prompt: Text("Search your saved products").foregroundColor(.gray)
             )
                 .textFieldStyle(.plain)
                 .font(.body.weight(.medium))
