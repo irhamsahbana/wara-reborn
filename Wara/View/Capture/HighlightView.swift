@@ -80,7 +80,7 @@ struct HighlightView: View {
                             borderColor: .blue
                         ))
                         
-                        Button("Check Ingredient") {
+                        Button("Check Product") {
                             onResult()
                         }
                         .buttonStyle(PrimaryButtonStyle(
