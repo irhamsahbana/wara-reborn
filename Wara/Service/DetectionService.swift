@@ -10,12 +10,8 @@ import SwiftData
 
 /// Menganalisis teks OCR, mengekstrak bagian bahan, dan memetakan ke entitas `Ingredient`.
 class DetectionService {
-    private let modelContext: ModelContext
-    
     // MARK: - Initialization
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
+    init() {}
     
     // MARK: - Methods
     @MainActor
@@ -35,33 +31,11 @@ class DetectionService {
             return DetectionResult(status: .ingredientsNotFound, foundIngredients: [], originalText: text)
         }
         
-        guard let cleanedIngredientFullText = self.removeIngredientExtraInformation(from: ingredientFullText) else {
+        guard self.removeIngredientExtraInformation(from: ingredientFullText) != nil else {
             return DetectionResult(status: .ingredientsNotFound, foundIngredients: [], originalText: text)
         }
 
-        let descriptor = FetchDescriptor<Ingredient>()
-        guard let allIngredients = try? modelContext.fetch(descriptor) else {
-            return DetectionResult(status: .raguRagu, foundIngredients: [], originalText: text)
-        }
-        
-        var foundItems: [Ingredient] = []
-        for ingredient in allIngredients {
-            if cleanedIngredientFullText.contains(ingredient.koreanName) {
-                foundItems.append(ingredient)
-            }
-        }
-        
-        if foundItems.isEmpty {
-            return DetectionResult(status: .aman, foundIngredients: [], originalText: text)
-        }
-        
-        if foundItems.contains(where: { $0.category == .tidakAman }) {
-            return DetectionResult(status: .tidakAman, foundIngredients: foundItems, originalText: text)
-        } else if foundItems.contains(where: { $0.category == .raguRagu }) {
-            return DetectionResult(status: .raguRagu, foundIngredients: foundItems, originalText: text)
-        } else {
-            return DetectionResult(status: .aman, foundIngredients: foundItems, originalText: text)
-        }
+        return DetectionResult(status: .aman, foundIngredients: [], originalText: text)
     }
     
     func hasIngredientsLabel(in text: String) -> Bool {

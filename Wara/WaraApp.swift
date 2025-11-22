@@ -29,6 +29,6 @@ struct WaraApp: App {
                 OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
             }
         }
-        .modelContainer(persistenceController.container)
+        // .modelContainer(persistenceController.container)
     }
 }

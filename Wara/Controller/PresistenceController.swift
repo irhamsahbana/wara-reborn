@@ -14,22 +14,11 @@ import OSLog
 class PersistenceController {
     static let shared = PersistenceController()
 
-    let container: ModelContainer
+    let container: ModelContainer?
     
     private init() {
-        do {
-            container = try ModelContainer(for: Ingredient.self)
-            
-            // 1. Ambil referensi container di Main Actor (aman)
-            let localContainer = self.container
-            
-            // 2. Jalankan tugas di background dengan memberikan container sebagai parameter
-            Task(priority: .background) {
-                await self.forceReloadDatabaseIfNeeded(using: localContainer)
-            }
-        } catch {
-            fatalError("Failed to initialize SwiftData container: \(error.localizedDescription)")
-        }
+        // container = try ModelContainer(for: Ingredient.self)
+        container = nil
     }
 
     /// Fungsi ini hanya akan berjalan di background dan terisolasi.

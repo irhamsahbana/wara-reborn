@@ -10,7 +10,6 @@ import SwiftUI
 
 struct CaptureView: View {
     
-    @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel: CameraViewModel
     
     @State private var selectedPhotoItem: PhotosPickerItem?
@@ -20,9 +19,7 @@ struct CaptureView: View {
     
     init() {
         _viewModel = StateObject(
-            wrappedValue: CameraViewModel(
-                modelContext: PersistenceController.shared.container.mainContext
-            )
+            wrappedValue: CameraViewModel()
         )
     }
     

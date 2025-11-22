@@ -6,7 +6,6 @@
 //
 import UIKit
 import Combine
-import SwiftData
 import SwiftUI
 import AVFoundation
 
@@ -37,9 +36,9 @@ class CameraViewModel: ObservableObject {
     @Published var lastCapturedImage: UIImage?
     
     // MARK: - Initialization
-    init(modelContext: ModelContext) {
+    init() {
         self.ocrService = OCRService()
-        self.detectionService = DetectionService(modelContext: modelContext)
+        self.detectionService = DetectionService()
         
         // Skip camera hardware setup during SwiftUI Previews
         if Env.isPreview {
