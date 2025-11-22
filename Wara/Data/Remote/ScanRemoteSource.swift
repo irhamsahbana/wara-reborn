@@ -68,4 +68,26 @@ class ScanRemoteSource {
             }
         })
     }
+
+    func scanProduct(id: String, rawOCRText: String, completion: @escaping (Result<ScanDataDTO, NetworkError>) -> Void) {
+        let url = "\(baseURL)/products/scan/v2"
+        let payload = ScanRequestDTO(id: id, rawOCRText: rawOCRText)
+
+        httpClient.request(url: url,
+                           method: .post,
+                           parameters: payload,
+                           includeUserHeader: true,
+                           completion: { (result: Result<ApiResponseDTO<ScanDataDTO>, NetworkError>) in
+            switch result {
+            case .success(let envelope):
+                if let data = envelope.data {
+                    completion(.success(data))
+                } else {
+                    completion(.failure(.custom(envelope.message ?? "Empty payload")))
+                }
+            case .failure(let err):
+                completion(.failure(err))
+            }
+        })
+    }
 }

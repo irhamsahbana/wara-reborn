@@ -244,26 +244,26 @@ struct ScanResultView: View {
                                     }
                                 }
 
-                                if(viewModel.productType == ProductType.SAFE_TO_CONSUME){
-                                    VStack(alignment: .center, spacing: 12){
-                                        Text("Looks like this product’s new to us! ")
-                                            .font(.body.weight(.semibold))
-                                            .foregroundColor(.primary)
+                                // if(viewModel.productType == ProductType.SAFE_TO_CONSUME){
+                                //     VStack(alignment: .center, spacing: 12){
+                                //         Text("Looks like this product’s new to us! ")
+                                //             .font(.body.weight(.semibold))
+                                //             .foregroundColor(.primary)
 
-                                        Text("Sharing this product to Wara, Your contribution help others find safer food choices that align with halal principles.")
-                                            .font(.body)
-                                            .foregroundColor(.primary)
-                                            .multilineTextAlignment(.center)
+                                //         Text("Sharing this product to Wara, Your contribution help others find safer food choices that align with halal principles.")
+                                //             .font(.body)
+                                //             .foregroundColor(.primary)
+                                //             .multilineTextAlignment(.center)
 
-                                        Button("Share to Wara") {
-                                            showSheet.toggle()
-                                        }
-                                        .buttonStyle(PrimaryButtonStyle(
-                                            backgroundColor: Color("primaryblue")
-                                        ))
-                                        .padding(.top, 4)
-                                    }
-                                }
+                                //         Button("Share to Wara") {
+                                //             showSheet.toggle()
+                                //         }
+                                //         .buttonStyle(PrimaryButtonStyle(
+                                //             backgroundColor: Color("primaryblue")
+                                //         ))
+                                //         .padding(.top, 4)
+                                //     }
+                                // }
                             }
                             .padding(.top, 16)
                             .padding(.horizontal, 16)
@@ -383,6 +383,8 @@ struct ScanResultView: View {
                 await viewModel.loadScanResultById(id)
             } else {
                 await viewModel.scan(rawOCRText: rawOCRText)
+                let label = (viewModel.data?.label?.lowercased() ?? "back")
+                viewModel.uploadCapturedPhoto(image: fallbackImage, packagingLabel: label)
             }
         }
         .navigationBarBackButtonHidden(true)

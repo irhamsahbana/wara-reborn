@@ -19,6 +19,8 @@ class ScanResultViewModel: ObservableObject {
     @Published var isLoadingAlternativeDetail: Bool = false
     @Published var alternativeDetailErrorMessage: String? = nil
     @Published var selectedAlternativeDetailData: AlternativeProductDetailDTO?
+    @Published var scanRequestId: String?
+    @Published var uploadedPhotoURL: String?
 
     private let remote = ScanRemoteSource.shared
     private let scanResultsRemote = ScanResultsRemoteSource.shared
@@ -124,7 +126,9 @@ class ScanResultViewModel: ObservableObject {
         errorMessage = nil
 
         await withCheckedContinuation { continuation in
-            remote.scanProduct(rawOCRText: rawOCRText) { result in
+            let id = UUIDv7.generate()
+            self.scanRequestId = id
+            remote.scanProduct(id: id, rawOCRText: rawOCRText) { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let payload):
@@ -212,6 +216,23 @@ class ScanResultViewModel: ObservableObject {
                     self.selectedAlternativeDetailData = detail
                 case .failure:
                     self.selectedAlternativeDetailData = nil
+                }
+            }
+        }
+    }
+
+    func uploadCapturedPhoto(image: UIImage?, packagingLabel: String) {
+        guard let image = image, let id = scanRequestId else { return }
+        guard let png = image.pngData() else { return }
+        let fileName = "scan_\(packagingLabel)_\(id).png"
+        scanResultsRemote.uploadScanPhoto(scanResultId: id, imageData: png, fileName: fileName, packagingLabel: packagingLabel) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let dto):
+                    self.uploadedPhotoURL = dto.url
+                case .failure:
+                    break
                 }
             }
         }
