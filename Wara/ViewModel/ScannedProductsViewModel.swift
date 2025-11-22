@@ -50,8 +50,7 @@ final class ScannedProductsViewModel: ObservableObject {
                 case .success(let payload):
                     self.totalPage = payload.meta.totalPage
                     self.items = payload.items.map { dto in
-                        let urlString = dto.frontCoverURL ?? dto.backCoverURL
-                        let url = URL(string: urlString ?? "")
+                        let url = self.preferredCoverURL(front: dto.frontCoverURL, back: dto.backCoverURL)
                         let status = self.mapStatusV2(dto.status)
                         return ScannedProductGridItem(
                             id: dto.id,
@@ -85,8 +84,7 @@ final class ScannedProductsViewModel: ObservableObject {
                         self.currentPage = nextPage
                         self.totalPage = payload.meta.totalPage
                         let newItems = payload.items.map { dto in
-                            let urlString = dto.frontCoverURL ?? dto.backCoverURL
-                            let url = URL(string: urlString ?? "")
+                            let url = self.preferredCoverURL(front: dto.frontCoverURL, back: dto.backCoverURL)
                             let status = self.mapStatusV2(dto.status)
                             return ScannedProductGridItem(
                                 id: dto.id,
@@ -112,8 +110,7 @@ final class ScannedProductsViewModel: ObservableObject {
             let name = (candidate.englishName ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
             let categoryRaw = candidate.englishCategory ?? candidate.koreanCategory ?? ""
             let category = categoryRaw.trimmingCharacters(in: .whitespacesAndNewlines)
-            let urlString = candidate.frontCoverURL ?? candidate.backCoverURL
-            let url = URL(string: urlString ?? "")
+            let url = preferredCoverURL(front: candidate.frontCoverURL, back: candidate.backCoverURL)
             let status = mapStatusV2(candidate.status)
             let isKmf = (candidate.isKmf == true) || status == .kmf_certified
             return ScannedProductGridItem(id: id, englishName: name, category: category, imageURL: url, status: status, isKmf: isKmf)
@@ -128,5 +125,19 @@ final class ScannedProductsViewModel: ObservableObject {
         case "haram", "non_halal": return .haram
         default: return .doubtful
         }
+    }
+
+    private func sanitizeURLString(_ raw: String?) -> String? {
+        guard var s = raw?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty else { return nil }
+        s = s.replacingOccurrences(of: "`", with: "")
+        s = s.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !s.isEmpty else { return nil }
+        return s
+    }
+
+    private func preferredCoverURL(front: String?, back: String?) -> URL? {
+        if let fs = sanitizeURLString(front), let url = URL(string: fs) { return url }
+        if let bs = sanitizeURLString(back), let url = URL(string: bs) { return url }
+        return nil
     }
 }

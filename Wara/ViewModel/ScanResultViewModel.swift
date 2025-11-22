@@ -221,11 +221,20 @@ class ScanResultViewModel: ObservableObject {
         }
     }
 
-    func uploadCapturedPhoto(image: UIImage?, packagingLabel: String) {
+    func uploadCapturedPhoto(image: UIImage?, packagingLabel: String, preferJPEG: Bool = true) {
         guard let image = image, let id = scanRequestId else { return }
-        guard let png = image.pngData() else { return }
-        let fileName = "scan_\(packagingLabel)_\(id).png"
-        scanResultsRemote.uploadScanPhoto(scanResultId: id, imageData: png, fileName: fileName, packagingLabel: packagingLabel) { [weak self] result in
+        var data: Data? = nil
+        var ext: String = "png"
+        if preferJPEG, let jpeg = image.jpegData(compressionQuality: 0.85) {
+            data = jpeg
+            ext = "jpg"
+        } else if let png = image.pngData() {
+            data = png
+            ext = "png"
+        }
+        guard let payload = data else { return }
+        let fileName = "scan_\(packagingLabel)_\(id).\(ext)"
+        scanResultsRemote.uploadScanPhoto(scanResultId: id, imageData: payload, fileName: fileName, packagingLabel: packagingLabel) { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {

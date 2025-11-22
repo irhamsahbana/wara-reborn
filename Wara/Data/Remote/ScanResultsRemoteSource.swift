@@ -103,8 +103,11 @@ final class ScanResultsRemoteSource {
             headers.add(name: "X-User-ID", value: userId)
         }
 
+        let ext = (fileName as NSString).pathExtension.lowercased()
+        let mimeType = (ext == "jpg" || ext == "jpeg") ? "image/jpeg" : "image/png"
+
         AF.upload(multipartFormData: { form in
-            form.append(imageData, withName: "file", fileName: fileName, mimeType: "image/png")
+            form.append(imageData, withName: "file", fileName: fileName, mimeType: mimeType)
             if let labelData = packagingLabel.data(using: .utf8) {
                 form.append(labelData, withName: "packaging_label")
             }
