@@ -13,6 +13,7 @@ struct AlternativeProductCard: View {
     let subtitle: String
     let imageURL: URL?
     let isHalalKMF: Bool
+    let isFavorited: Bool
     let likes: Int
     let onFavoriteTapped: (() -> Void)?
     let width: CGFloat = 160
@@ -27,8 +28,8 @@ struct AlternativeProductCard: View {
                     .padding(.all, 8)
 
                 Button(action: { onFavoriteTapped?() }) {
-                    Image(systemName: "heart")
-                        .foregroundColor(.black)
+                    Image(systemName: isFavorited ? "heart.fill" : "heart")
+                        .foregroundColor(isFavorited ? .red : .black)
                         .padding(5)
                         .background(Color.white)
                         .clipShape(Circle())
@@ -36,8 +37,6 @@ struct AlternativeProductCard: View {
                 }
                 .padding(10)
                 .padding(.top, 2)
-
-                // Removed KMF logo overlay as per policy
             }
 
             VStack(alignment: .leading, spacing: 4) {
@@ -101,6 +100,7 @@ struct AlternativeProductCard: View {
         subtitle: "기타가공품",
         imageURL: URL(string: "https://picsum.photos/200/100"),
         isHalalKMF: true,
+        isFavorited: false,
         likes: 384,
         onFavoriteTapped: {}
     )

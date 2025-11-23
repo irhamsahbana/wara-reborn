@@ -87,6 +87,7 @@ struct ScanResultFrontView: View {
                                         subtitle: item.category,
                                         imageURL: item.imageURL,
                                         isHalalKMF: item.isKmf,
+                                        isFavorited: false,
                                         likes: 0,
                                         onFavoriteTapped: nil
                                     )

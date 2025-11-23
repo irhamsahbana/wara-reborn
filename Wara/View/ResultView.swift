@@ -14,6 +14,7 @@ struct ResultView: View {
         let subtitle: String
         let imageURL: URL?
         let isHalalKMF: Bool
+        let isFavorited: Bool
         let likes: Int
     }
 
@@ -22,21 +23,25 @@ struct ResultView: View {
               subtitle: "Rice Cake",
               imageURL: URL(string: "https://picsum.photos/200/101"),
               isHalalKMF: true,
+              isFavorited: false,
               likes: 124),
         .init(title: "Mango Sticky Rice Cake",
               subtitle: "Rice Cake",
               imageURL: URL(string: "https://picsum.photos/200/102"),
               isHalalKMF: true,
+              isFavorited: false,
               likes: 98),
         .init(title: "Melon Sticky Rice Cake",
               subtitle: "Rice Cake",
               imageURL: URL(string: "https://picsum.photos/200/103"),
               isHalalKMF: true,
+              isFavorited: false,
               likes: 65),
         .init(title: "Blueberry Sticky Rice Cake",
               subtitle: "Rice Cake",
               imageURL: URL(string: "https://picsum.photos/200/104"),
               isHalalKMF: true,
+              isFavorited: false,
               likes: 77)
     ]
 
@@ -113,6 +118,7 @@ struct ResultView: View {
                                     subtitle: item.subtitle,
                                     imageURL: item.imageURL,
                                     isHalalKMF: item.isHalalKMF,
+                                    isFavorited: item.isFavorited,
                                     likes: item.likes,
                                     onFavoriteTapped: { }
                                 )

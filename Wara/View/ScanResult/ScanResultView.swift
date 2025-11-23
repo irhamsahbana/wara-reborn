@@ -299,9 +299,10 @@ struct ScanResultView: View {
                                                         subtitle: item.koreanCategory,
                                                         imageURL: URL(string: item.frontCoverURL ?? ""),
                                                         isHalalKMF: item.isKmf,
+                                                        isFavorited: item.isFavorited,
                                                         likes: item.favoriteCounter,
                                                         onFavoriteTapped: {
-                                                            print("Favorited \(item.id)")
+                                                            viewModel.toggleFavorite(itemId: item.id, isKmf: item.isKmf)
                                                         }
                                                     )
                                                     .onTapGesture {

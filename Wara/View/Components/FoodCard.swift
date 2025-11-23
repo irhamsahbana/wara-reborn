@@ -71,7 +71,7 @@ struct FoodCard: View {
                 .padding(10)
                 .padding(.top, 2)
                 
-                // Removed KMF logo overlay as per policy
+                
                     
             }
             

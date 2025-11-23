@@ -12,6 +12,7 @@ import Foundation
 struct AlternativeProductItemDTO: Decodable, Identifiable {
     let id: String
     let isKmf: Bool
+    let isFavorited: Bool
     let englishCategory: String
     let koreanCategory: String
     let englishName: String
@@ -22,6 +23,7 @@ struct AlternativeProductItemDTO: Decodable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case id
         case isKmf = "is_kmf"
+        case isFavorited = "is_favorited"
         case englishCategory = "english_category"
         case koreanCategory = "korean_category"
         case englishName = "english_name"

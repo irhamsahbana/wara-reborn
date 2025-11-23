@@ -87,6 +87,7 @@ final class AlternativeRemoteSource {
                     let item = AlternativeProductItemDTO(
                         id: id,
                         isKmf: detail.isKmf ?? (category.lowercased() == "kmf"),
+                        isFavorited: false,
                         englishCategory: detail.englishProductCategory ?? "",
                         koreanCategory: detail.koreanProductCategory ?? "",
                         englishName: detail.englishName ?? "",
@@ -107,6 +108,7 @@ final class AlternativeRemoteSource {
                                 let item = AlternativeProductItemDTO(
                                     id: id,
                                     isKmf: data.isKmf,
+                                    isFavorited: false,
                                     englishCategory: data.englishProductCategory ?? "",
                                     koreanCategory: data.koreanProductCategory ?? "",
                                     englishName: data.englishName,
@@ -135,6 +137,7 @@ final class AlternativeRemoteSource {
                             let item = AlternativeProductItemDTO(
                                 id: id,
                                 isKmf: data.isKmf,
+                                isFavorited: false,
                                 englishCategory: data.englishProductCategory ?? "",
                                 koreanCategory: data.koreanProductCategory ?? "",
                                 englishName: data.englishName,
@@ -211,6 +214,29 @@ final class AlternativeRemoteSource {
                             completion(.failure(e))
                         }
                     })
+                }
+            case .failure(let err):
+                completion(.failure(err))
+            }
+        })
+    }
+
+    func toggleFavorite(id: String, favoritableType: String, completion: @escaping (Result<Bool, NetworkError>) -> Void) {
+        let url = "\(baseURL)/products/favorites"
+        let payload = FavoriteRequestDTO(id: id, favoritableType: favoritableType)
+        httpClient.request(url: url,
+                           method: .post,
+                           parameters: payload,
+                           includeUserHeader: true,
+                           completion: { (result: Result<ApiResponseDTO<FavoriteResponseDTO>, NetworkError>) in
+            switch result {
+            case .success(let envelope):
+                if envelope.success == false {
+                    completion(.failure(.custom(envelope.message ?? "Unknown error")))
+                } else if let data = envelope.data {
+                    completion(.success(data.isFavorited))
+                } else {
+                    completion(.failure(.custom(envelope.message ?? "Empty payload")))
                 }
             case .failure(let err):
                 completion(.failure(err))

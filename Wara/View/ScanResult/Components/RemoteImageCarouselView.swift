@@ -93,7 +93,7 @@ struct RemoteImageCarouselView: View {
                 .padding(.horizontal, 12)
             }
 
-            // Removed KMF logo overlay as per policy
+            
         }
         .frame(width: 288, height: 276)
     }

@@ -267,4 +267,34 @@ class ScanResultViewModel: ObservableObject {
         guard !s.isEmpty else { return nil }
         return s
     }
+
+    func toggleFavorite(itemId: String, isKmf: Bool) {
+        let type = isKmf ? "kmf" : "user"
+        altRemote.toggleFavorite(id: itemId, favoritableType: type) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let newIsFav):
+                    if let idx = self.alternativeItems.firstIndex(where: { $0.id == itemId }) {
+                        let old = self.alternativeItems[idx]
+                        let delta = (newIsFav && !old.isFavorited) ? 1 : ((!newIsFav && old.isFavorited) ? -1 : 0)
+                        let newCounter = max(0, old.favoriteCounter + delta)
+                        self.alternativeItems[idx] = AlternativeProductItemDTO(
+                            id: old.id,
+                            isKmf: old.isKmf,
+                            isFavorited: newIsFav,
+                            englishCategory: old.englishCategory,
+                            koreanCategory: old.koreanCategory,
+                            englishName: old.englishName,
+                            frontCoverURL: old.frontCoverURL,
+                            backCoverURL: old.backCoverURL,
+                            favoriteCounter: newCounter
+                        )
+                    }
+                case .failure(let err):
+                    self.errorMessage = err.localizedDescription
+                }
+            }
+        }
+    }
 }
