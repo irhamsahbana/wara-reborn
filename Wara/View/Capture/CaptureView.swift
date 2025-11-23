@@ -18,6 +18,10 @@ struct CaptureView: View {
     @State private var showScannedProduct: Bool = false
     
     init() {
+        if !Env.isPreview {
+            UserManager.shared.ensureUserInitialized()
+        }
+
         _viewModel = StateObject(
             wrappedValue: CameraViewModel()
         )

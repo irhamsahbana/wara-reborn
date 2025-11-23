@@ -74,6 +74,50 @@ actor ImageCacheManager {
         }
     }
 
+    private func isImageResponse(_ response: URLResponse) -> Bool {
+        if let http = response as? HTTPURLResponse,
+           let contentType = http.value(forHTTPHeaderField: "Content-Type") {
+            return contentType.lowercased().hasPrefix("image/")
+        }
+        return true
+    }
+
+    private func makeRequest(for url: URL) -> URLRequest {
+        var r = URLRequest(url: url)
+        r.httpMethod = "GET"
+        r.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1", forHTTPHeaderField: "User-Agent")
+        if let scheme = url.scheme, let host = url.host, !host.isEmpty, host.contains("heechang.com") {
+            var referer = "\(scheme)://\(host)"
+            if let comps = URLComponents(url: url, resolvingAgainstBaseURL: false),
+               let bo = comps.queryItems?.first(where: { $0.name == "bo_table" })?.value,
+               !bo.isEmpty {
+                referer = "\(scheme)://\(host)/bbs/board.php?bo_table=\(bo)"
+            }
+            r.setValue(referer, forHTTPHeaderField: "Referer")
+            r.setValue("\(scheme)://\(host)", forHTTPHeaderField: "Origin")
+        }
+        return r
+    }
+
+    private func buildCandidates(for url: URL) -> [URL] {
+        var list: [URL] = [url]
+        if let host = url.host, host.contains("heechang.com"),
+           let comps = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+            let queryItems = comps.queryItems ?? []
+            let fnVal = queryItems.first(where: { $0.name == "fn" })?.value ?? ""
+            let boVal = queryItems.first(where: { $0.name == "bo_table" })?.value ?? ""
+            if fnVal.hasPrefix("/"), let scheme = url.scheme,
+               let direct = URL(string: "\(scheme)://\(host)\(fnVal)") {
+                list.append(direct)
+            } else if !boVal.isEmpty && !fnVal.isEmpty,
+                      let scheme = url.scheme,
+                      let direct = URL(string: "\(scheme)://\(host)/data/file/\(boVal)/\(fnVal)") {
+                list.append(direct)
+            }
+        }
+        return list
+    }
+
     /// Loads an image: checks cache first, otherwise downloads and caches it.
     func loadImage(id: String?, url: URL) async -> UIImage? {
         let key = key(for: id, urlString: url.absoluteString)
@@ -82,12 +126,21 @@ actor ImageCacheManager {
             return cached
         }
 
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            store(data: data, forKey: key)
-            return UIImage(data: data)
-        } catch {
-            return nil
+        let candidates = buildCandidates(for: url)
+        for u in candidates {
+            do {
+                let host = u.host ?? ""
+                let (data, _) = host.contains("heechang.com")
+                    ? try await URLSession.shared.data(for: makeRequest(for: u))
+                    : try await URLSession.shared.data(from: u)
+                if let img = UIImage(data: data) {
+                    store(data: data, forKey: key)
+                    return img
+                }
+            } catch {
+                continue
+            }
         }
+        return nil
     }
 }

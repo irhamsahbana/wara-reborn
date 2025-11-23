@@ -156,11 +156,12 @@ class ScanResultViewModel: ObservableObject {
         }
     }
 
-    func loadScanResultById(_ id: String) async {
+    func loadScanResultById(_ id: String, category: String? = nil) async {
         isLoading = true
         errorMessage = nil
         await withCheckedContinuation { continuation in
-            scanResultsRemote.fetchScanResultDetail(id: id) { result in
+            let cat = (category?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ?? "user")
+            scanResultsRemote.fetchScanResultDetail(id: id, category: cat) { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let payload):
@@ -201,7 +202,7 @@ class ScanResultViewModel: ObservableObject {
     }
 
     func loadAlternativeDetail(id: String, isKmf: Bool, completion: ((Result<AlternativeProductItemDTO, NetworkError>) -> Void)? = nil) {
-        let categoryParam = isKmf ? "kmf" : "non_kmf"
+        let categoryParam = isKmf ? "kmf" : "user"
         isLoadingAlternativeDetail = true
         alternativeDetailErrorMessage = nil
         altRemote.fetchAlternativeDetail(id: id, category: categoryParam) { [weak self] result in

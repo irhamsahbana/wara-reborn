@@ -37,7 +37,8 @@ struct ScannedProductView: View {
                                     onDismiss: { dismiss() },
                                     rawOCRText: "",
                                     fallbackImage: nil,
-                                    scanResultId: item.id
+                                    scanResultId: item.id,
+                                    sourceCategory: item.sourceCategory
                                 )
                             ) {
                                 ScannedProductView.ProductCard(item: item)

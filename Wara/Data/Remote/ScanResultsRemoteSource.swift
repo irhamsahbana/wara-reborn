@@ -73,9 +73,10 @@ final class ScanResultsRemoteSource {
         })
     }
 
-    func fetchScanResultDetail(id: String, completion: @escaping (Result<ScanDataDTO, NetworkError>) -> Void) {
+    func fetchScanResultDetail(id: String, category: String, completion: @escaping (Result<ScanDataDTO, NetworkError>) -> Void) {
         let encodedId = id.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? id
-        let url = "\(baseURL)/products/scan-results/\(encodedId)"
+        let encodedCategory = category.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? category
+        let url = "\(baseURL)/products/scan-results/\(encodedId)?category=\(encodedCategory)"
         httpClient.request(url: url,
                            method: .get,
                            parameters: nil as String?,

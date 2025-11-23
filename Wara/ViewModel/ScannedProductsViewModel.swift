@@ -17,6 +17,7 @@ final class ScannedProductsViewModel: ObservableObject {
         let imageURL: URL?
         let status: ProductTypeV2
         let isKmf: Bool
+        let sourceCategory: String?
     }
 
     @Published var items: [ScannedProductGridItem] = []
@@ -52,13 +53,15 @@ final class ScannedProductsViewModel: ObservableObject {
                     self.items = payload.items.map { dto in
                         let url = self.preferredCoverURL(front: dto.frontCoverURL, back: dto.backCoverURL)
                         let status = self.mapStatusV2(dto.status)
+                        let isKmf = (dto.sourceCategory?.lowercased() == "kmf")
                         return ScannedProductGridItem(
                             id: dto.id,
                             englishName: dto.englishName,
                             category: dto.englishProductCategory,
                             imageURL: url,
                             status: status,
-                            isKmf: status == .kmf_certified
+                            isKmf: isKmf,
+                            sourceCategory: dto.sourceCategory
                         )
                     }
                 case .failure(let err):
@@ -86,13 +89,15 @@ final class ScannedProductsViewModel: ObservableObject {
                         let newItems = payload.items.map { dto in
                             let url = self.preferredCoverURL(front: dto.frontCoverURL, back: dto.backCoverURL)
                             let status = self.mapStatusV2(dto.status)
+                            let isKmf = (dto.sourceCategory?.lowercased() == "kmf")
                             return ScannedProductGridItem(
                                 id: dto.id,
                                 englishName: dto.englishName,
                                 category: dto.englishProductCategory,
                                 imageURL: url,
                                 status: status,
-                                isKmf: status == .kmf_certified
+                                isKmf: isKmf,
+                                sourceCategory: dto.sourceCategory
                             )
                         }
                         self.items.append(contentsOf: newItems)
@@ -113,7 +118,7 @@ final class ScannedProductsViewModel: ObservableObject {
             let url = preferredCoverURL(front: candidate.frontCoverURL, back: candidate.backCoverURL)
             let status = mapStatusV2(candidate.status)
             let isKmf = (candidate.isKmf == true) || status == .kmf_certified
-            return ScannedProductGridItem(id: id, englishName: name, category: category, imageURL: url, status: status, isKmf: isKmf)
+            return ScannedProductGridItem(id: id, englishName: name, category: category, imageURL: url, status: status, isKmf: isKmf, sourceCategory: candidate.isKmf == true ? "kmf" : nil)
         }
     }
 

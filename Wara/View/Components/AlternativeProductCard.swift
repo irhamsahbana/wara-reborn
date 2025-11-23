@@ -37,14 +37,7 @@ struct AlternativeProductCard: View {
                 .padding(10)
                 .padding(.top, 2)
 
-                if isHalalKMF {
-                    Image("halal")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 35)
-                        .padding(.top, 67)
-                        .padding(.trailing, 10)
-                }
+                // Removed KMF logo overlay as per policy
             }
 
             VStack(alignment: .leading, spacing: 4) {

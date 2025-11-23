@@ -16,9 +16,6 @@ struct WaraApp: App {
 
     init() {
         // Initialize user at app launch (skip during SwiftUI Previews)
-        if !Env.isPreview {
-            UserManager.shared.ensureUserInitialized()
-        }
     }
 
     var body: some Scene {

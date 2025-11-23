@@ -52,15 +52,19 @@ struct CameraPermissionView: View {
             
             Button(action: requestCameraPermission) {
                 Text("Continue")
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Color("primaryblue"))
-                    .cornerRadius(12)
             }
+            .buttonStyle(
+                PrimaryButtonStyle(
+                    backgroundColor: Color("primaryblue"),
+                    cornerRadius: 28
+                )
+            )
+            .padding(.horizontal, 16)
+            .padding(.top, 12)
+            .padding(.bottom, 24)
         }
         .padding()
+        .background(Color("background").ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
     }
 }

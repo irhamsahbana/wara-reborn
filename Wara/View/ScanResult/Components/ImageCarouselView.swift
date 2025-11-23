@@ -73,20 +73,7 @@ struct ImageCarouselView: View {
                 .padding(.horizontal, 12)
             }
             
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    if(isHalalKMF){
-                        Image("halal")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 60, height: 60)
-                            .padding(.bottom, 20)
-                            .padding(.trailing, 10)
-                    }
-                }
-            }
+            // Removed KMF logo overlay as per policy
         }
         .frame(width: 288, height: 276)
     }

@@ -25,32 +25,14 @@ struct RemoteImageCarouselView: View {
                 Spacer()
 
                 if imageURLs.indices.contains(currentIndex) {
-                    AsyncImage(url: imageURLs[currentIndex]) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 160, height: 200)
-                        case .failure:
-                            if let local = fallbackImage {
-                                Image(uiImage: local)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 160, height: 200)
-                            } else {
-                                Image(systemName: "photo")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 160, height: 200)
-                                    .foregroundColor(.gray)
-                            }
-                        @unknown default:
-                            EmptyView()
-                        }
-                    }
+                    CachedRemoteImageView(
+                        id: nil,
+                        url: imageURLs[currentIndex],
+                        contentMode: .fit,
+                        cornerRadius: 12,
+                        placeholderColor: Color.white
+                    )
+                    .frame(width: 160, height: 200)
                 } else if let local = fallbackImage {
                     Image(uiImage: local)
                         .resizable()
@@ -111,20 +93,7 @@ struct RemoteImageCarouselView: View {
                 .padding(.horizontal, 12)
             }
 
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    if isHalalKMF {
-                        Image("halal")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 60, height: 60)
-                            .padding(.bottom, 20)
-                            .padding(.trailing, 10)
-                    }
-                }
-            }
+            // Removed KMF logo overlay as per policy
         }
         .frame(width: 288, height: 276)
     }

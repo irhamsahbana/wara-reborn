@@ -39,6 +39,7 @@ struct ScanResultView: View {
     let rawOCRText: String
     let fallbackImage: UIImage?
     let scanResultId: String?
+    let sourceCategory: String?
     @Environment(\.dismiss) private var dismiss
 
     @StateObject private var viewModel = ScanResultViewModel()
@@ -47,11 +48,12 @@ struct ScanResultView: View {
     @State private var loadingProgress: Double = 0.0
     @State private var loadingTimer: Timer?
     
-    init(onDismiss: @escaping () -> Void, rawOCRText: String, fallbackImage: UIImage?, scanResultId: String? = nil) {
+    init(onDismiss: @escaping () -> Void, rawOCRText: String, fallbackImage: UIImage?, scanResultId: String? = nil, sourceCategory: String? = nil) {
         self.onDismiss = onDismiss
         self.rawOCRText = rawOCRText
         self.fallbackImage = fallbackImage
         self.scanResultId = scanResultId
+        self.sourceCategory = sourceCategory
     }
 
     var body: some View {
@@ -109,7 +111,7 @@ struct ScanResultView: View {
                             }
                             .padding()
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                        } else if let data = viewModel.data, (data.label?.lowercased() ?? "") != "back" {
+                        } else if let data = viewModel.data, (data.label?.lowercased() ?? "") != "back" && scanResultId == nil {
                             ScanResultUnknownView(
                                 onRescan: { onDismiss() }
                             )
@@ -380,7 +382,7 @@ struct ScanResultView: View {
         }
         .task {
             if let id = scanResultId, !id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                await viewModel.loadScanResultById(id)
+                await viewModel.loadScanResultById(id, category: sourceCategory)
             } else {
                 await viewModel.scan(rawOCRText: rawOCRText)
                 let label = (viewModel.data?.label?.lowercased() ?? "back")

@@ -10,6 +10,7 @@ import Foundation
 struct ScanResultsItemDTO: Decodable, Identifiable {
     let id: String
     let status: String
+    let sourceCategory: String?
     let frontCoverURL: String?
     let backCoverURL: String?
     let englishName: String
@@ -18,6 +19,7 @@ struct ScanResultsItemDTO: Decodable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case id
         case status
+        case sourceCategory = "category"
         case frontCoverURL = "front_cover_url"
         case backCoverURL = "back_cover_url"
         case englishName = "english_name"
