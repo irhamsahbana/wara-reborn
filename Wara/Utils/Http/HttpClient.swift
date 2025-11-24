@@ -68,6 +68,16 @@ class HttpClient {
                     case .success(let value):
                         completion(.success(value))
                     case .failure(let afError):
+                        if (response.response?.statusCode == 400), let data = response.data {
+                            do {
+                                let envelope = try JSONDecoder().decode(ApiResponseDTO<EmptyDTO>.self, from: data)
+                                if let msg = envelope.message, !msg.isEmpty {
+                                    completion(.failure(.custom(msg)))
+                                    return
+                                }
+                            } catch {
+                            }
+                        }
                         if let decodingError = afError.underlyingError as? DecodingError {
                             completion(.failure(.decodingError(decodingError)))
                         } else {

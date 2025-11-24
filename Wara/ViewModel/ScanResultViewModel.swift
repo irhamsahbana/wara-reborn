@@ -21,6 +21,8 @@ class ScanResultViewModel: ObservableObject {
     @Published var selectedAlternativeDetailData: AlternativeProductDetailDTO?
     @Published var scanRequestId: String?
     @Published var uploadedPhotoURL: String?
+    @Published var isScannedProductFavorited: Bool = false
+    @Published var scannedProductId: String?
 
     private let remote = ScanRemoteSource.shared
     private let scanResultsRemote = ScanResultsRemoteSource.shared
@@ -145,6 +147,12 @@ class ScanResultViewModel: ObservableObject {
                     switch result {
                     case .success(let payload):
                         self.data = payload
+                        self.isScannedProductFavorited = payload.isFavorited ?? false
+                        if let pid = payload.id, !pid.isEmpty {
+                            self.scannedProductId = pid
+                        } else if let candidates = payload.productCandidates, let first = candidates.first?.id, !first.isEmpty {
+                            self.scannedProductId = first
+                        }
                         self.loadAlternatives()
                     case .failure(let err):
                         self.errorMessage = err.localizedDescription
@@ -166,6 +174,12 @@ class ScanResultViewModel: ObservableObject {
                     switch result {
                     case .success(let payload):
                         self.data = payload
+                        if let pid = payload.id, !pid.isEmpty {
+                            self.scannedProductId = pid
+                        } else {
+                            self.scannedProductId = id
+                        }
+                        self.isScannedProductFavorited = payload.isFavorited ?? false
                         self.loadAlternatives()
                     case .failure(let err):
                         self.errorMessage = err.localizedDescription
@@ -291,6 +305,25 @@ class ScanResultViewModel: ObservableObject {
                             favoriteCounter: newCounter
                         )
                     }
+                case .failure(let err):
+                    self.errorMessage = err.localizedDescription
+                }
+            }
+        }
+    }
+
+    func toggleScannedProductFavorite() {
+        let type = self.isKMF ? "kmf" : "user"
+        guard let id = self.data?.id ?? self.scannedProductId ?? self.data?.productCandidates?.first?.id else {
+            self.errorMessage = "Product ID tidak tersedia"
+            return
+        }
+        altRemote.toggleFavorite(id: id, favoritableType: type) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let isFav):
+                    self.isScannedProductFavorited = isFav
                 case .failure(let err):
                     self.errorMessage = err.localizedDescription
                 }

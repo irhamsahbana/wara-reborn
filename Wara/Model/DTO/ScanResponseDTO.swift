@@ -49,6 +49,7 @@ struct ScanFacilityDTO: Decodable {
 struct ScanDataDTO: Decodable {
     // Status keseluruhan hasil scan dari backend
     // Nilai yang diharapkan: kmf_certified, no_haram, doubtful, haram
+    let id: String?
     let status: String
     let statusMessage: String
     let englishName: String
@@ -73,8 +74,10 @@ struct ScanDataDTO: Decodable {
     let facility: ScanFacilityDTO?
     let label: String?
     let productCandidates: [ProductCandidateDTO]?
+    let isFavorited: Bool?
 
     enum CodingKeys: String, CodingKey {
+        case id
         case status
         case statusMessage = "status_message"
         case englishName = "english_name"
@@ -99,5 +102,6 @@ struct ScanDataDTO: Decodable {
         case facility
         case label
         case productCandidates = "product_candidates"
+        case isFavorited = "is_favorited"
     }
 }

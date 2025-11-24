@@ -123,6 +123,16 @@ final class ScanResultsRemoteSource {
                     completion(.failure(.custom(envelope.message ?? "Empty payload")))
                 }
             case .failure(let afError):
+                if (response.response?.statusCode == 400), let data = response.data {
+                    do {
+                        let env = try JSONDecoder().decode(ApiResponseDTO<EmptyDTO>.self, from: data)
+                        if let msg = env.message, !msg.isEmpty {
+                            completion(.failure(.custom(msg)))
+                            return
+                        }
+                    } catch {
+                    }
+                }
                 completion(.failure(.afError(afError)))
             }
         }

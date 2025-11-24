@@ -72,8 +72,9 @@ struct ScanResultView: View {
                         CustomAppBar(
                             title: viewModel.isLoading && viewModel.data == nil ? "Loading" : "Details",
                             onBack: { onDismiss(); dismiss() },
-                            onFavorite: { print("Favorite tapped") },
-                            isFavoriteEnabled: !(viewModel.isLoading && viewModel.data == nil) && ((viewModel.data?.label?.lowercased() ?? "") == "back")
+                            onFavorite: { viewModel.toggleScannedProductFavorite() },
+                            isFavoriteEnabled: viewModel.data != nil,
+                            isFavorited: viewModel.isScannedProductFavorited
                         )
                         
                         
