@@ -16,6 +16,8 @@ struct ScanResultFrontView: View {
     let candidates: [ProductCandidateDTO]
 
     @StateObject private var viewModel = ScannedProductsViewModel()
+    @StateObject private var scanResultViewModel = ScanResultViewModel()
+    @State private var showAlternativeDetail = false
 
     private let columns = [
         GridItem(.flexible(), spacing: 12),
@@ -87,11 +89,18 @@ struct ScanResultFrontView: View {
                                         subtitle: item.category,
                                         imageURL: item.imageURL,
                                         isHalalKMF: item.isKmf,
-                                        isFavorited: false,
-                                        likes: 0,
-                                        onFavoriteTapped: nil
+                                        isFavorited: getAlternativeItem(id: item.id)?.isFavorited ?? false,
+                                        likes: getAlternativeItem(id: item.id)?.favoriteCounter ?? 0,
+                                        onFavoriteTapped: {
+                                            scanResultViewModel.toggleFavorite(itemId: item.id, isKmf: item.isKmf)
+                                        }
                                     )
                                     .frame(maxWidth: .infinity)
+                                    .onTapGesture {
+                                        scanResultViewModel.loadAlternativeDetail(id: item.id, isKmf: item.isKmf) { _ in
+                                            showAlternativeDetail = true
+                                        }
+                                    }
                                 }
                             }
                             .padding(.horizontal, 16)
@@ -110,9 +119,31 @@ struct ScanResultFrontView: View {
             .padding(.vertical, 8)
             .background(Color(.systemGroupedBackground))
         }
+        .sheet(isPresented: $showAlternativeDetail) {
+            VStack(spacing: 12) {
+                if scanResultViewModel.isLoadingAlternativeDetail {
+                    ProgressView()
+                        .padding()
+                } else if let detail = scanResultViewModel.selectedAlternativeDetailData {
+                    AlternativeDetailView(detail: detail, fallbackImage: fallbackImage)
+                } else {
+                    Text(scanResultViewModel.alternativeDetailErrorMessage ?? "Failed to load alternative product")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .padding()
+                }
+            }
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
+        }
         .onAppear {
             viewModel.loadCandidates(candidates)
+            scanResultViewModel.loadAlternativesFromCandidates(candidates)
         }
+    }
+    
+    private func getAlternativeItem(id: String) -> AlternativeProductItemDTO? {
+        scanResultViewModel.alternativeItems.first(where: { $0.id == id })
     }
 }
 

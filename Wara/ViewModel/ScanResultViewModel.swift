@@ -282,6 +282,24 @@ class ScanResultViewModel: ObservableObject {
         return s
     }
 
+    func loadAlternativesFromCandidates(_ candidates: [ProductCandidateDTO]) {
+        alternativeItems = candidates.compactMap { candidate -> AlternativeProductItemDTO? in
+            guard let id = candidate.id else { return nil }
+            let isKmf = candidate.isKmf ?? false
+            return AlternativeProductItemDTO(
+                id: id,
+                isKmf: isKmf,
+                isFavorited: false,
+                englishCategory: candidate.englishCategory ?? "",
+                koreanCategory: candidate.koreanCategory ?? "",
+                englishName: candidate.englishName ?? "",
+                frontCoverURL: candidate.frontCoverURL,
+                backCoverURL: candidate.backCoverURL,
+                favoriteCounter: 0
+            )
+        }
+    }
+
     func toggleFavorite(itemId: String, isKmf: Bool) {
         let type = isKmf ? "kmf" : "user"
         altRemote.toggleFavorite(id: itemId, favoritableType: type) { [weak self] result in
