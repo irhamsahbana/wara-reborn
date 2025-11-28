@@ -20,7 +20,7 @@ struct ScanErrorView: View {
             Button("Back") {
                 onBack()
             }
-            .buttonStyle(PrimaryButtonStyle(backgroundColor: Color("waraPrimary")))
+            .buttonStyle(PrimaryButtonStyle(backgroundColor: Color.waraPrimary))
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)

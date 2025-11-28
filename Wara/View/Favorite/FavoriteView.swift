@@ -36,7 +36,7 @@ struct FavoriteView: View {
 
                 Spacer()
             }
-            .background(Color("waraBackground").ignoresSafeArea())
+            .background(Color.waraBackground.ignoresSafeArea())
         }
 }
 

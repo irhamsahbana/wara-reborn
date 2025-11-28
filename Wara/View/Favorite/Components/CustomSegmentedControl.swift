@@ -30,7 +30,7 @@ struct CustomSegmentedControl: View {
                         .background(
                             Group {
                                 if selectedTab == tab {
-                                    Color("waraHalal")
+                                    Color.waraHalal
                                 } else {
                                         Color.clear
                                 }
@@ -41,7 +41,7 @@ struct CustomSegmentedControl: View {
             }
         }
         .padding(4)
-        .background(Color("waraChipBackground"))
+        .background(Color.waraChipBackground)
         .clipShape(Capsule())
         .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1)
     }

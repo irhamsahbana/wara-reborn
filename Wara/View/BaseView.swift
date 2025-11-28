@@ -35,8 +35,8 @@ struct BaseView: View {
                     }
                     .tag(2)
             }
-            .accentColor(Color("waraPrimary"))
-            .background(Color("waraBackground"))
+            .accentColor(Color.waraPrimary)
+            .background(Color.waraBackground)
             .onChange(of: selectedTab) {
                 if selectedTab == 1 {
                     showCamera = true

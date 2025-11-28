@@ -17,7 +17,7 @@ struct AlternativesSection: View {
     let onTapItem: (String, Bool, @escaping (Bool) -> Void) -> Void
     
     var body: some View {
-        CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity) {
+        CardView(backgroundColor: Color.waraChipBackground, aligment: .leading, width: .infinity) {
             VStack(alignment: .leading) {
                 Text(isKMF || productType == .SAFE_TO_CONSUME ? "Other Product you Might Try:" : "Alternative Products:")
                     .font(.title3.weight(.semibold))
@@ -99,5 +99,5 @@ struct AlternativesSection: View {
             onTapItem: { _, _, _ in }
         )
     }
-    .background(Color("waraBackground"))
+    .background(Color.waraBackground)
 }

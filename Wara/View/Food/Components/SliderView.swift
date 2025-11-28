@@ -29,7 +29,7 @@ struct SliderView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, maxHeight: 180)
-                        .background(Color("waraSliderYellow"))
+                        .background(Color.waraSliderYellow)
                         .tag(0)
                 } else {
                     ForEach(Array(viewModel.items.enumerated()), id: \.offset) { index, item in
@@ -39,7 +39,7 @@ struct SliderView: View {
                                 title: item.name,
                                 description: item.description,
                                 iconURL: item.iconURL,
-                                headerBackgroundColor: Color("waraSliderYellow")
+                                headerBackgroundColor: Color.waraSliderYellow
                             )
                         } label: {
                             HStack {
@@ -77,7 +77,7 @@ struct SliderView: View {
                             .padding(.top, 50)
                             .padding(.horizontal)
                             .frame(maxWidth: .infinity, maxHeight: 180)
-                            .background(Color("waraSliderYellow"))
+                            .background(Color.waraSliderYellow)
                         }
                         .tag(index)
                     }

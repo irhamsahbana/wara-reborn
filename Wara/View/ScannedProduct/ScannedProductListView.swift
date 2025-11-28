@@ -84,7 +84,7 @@ struct ScannedProductListView: View {
         }
         .navigationTitle("")
         .navigationBarHidden(true)
-        .background(Color("waraBackground").ignoresSafeArea())
+        .background(Color.waraBackground.ignoresSafeArea())
         .alert("Remove from Favorites", isPresented: $showUnfavoriteDialog) {
             Button("Cancel", role: .cancel) {
                 itemToUnfavorite = nil

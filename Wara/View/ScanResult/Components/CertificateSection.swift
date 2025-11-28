@@ -15,7 +15,7 @@ struct CertificateSection: View {
     
     var body: some View {
         if isKMF {
-            CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity) {
+            CardView(backgroundColor: Color.waraChipBackground, aligment: .leading, width: .infinity) {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Certificate No:")
                         .font(.title3.weight(.semibold))
@@ -48,5 +48,5 @@ struct CertificateSection: View {
             certificateValid: "2022-08-29 ~ 2025-08-28"
         )
     }
-    .background(Color("waraBackground"))
+    .background(Color.waraBackground)
 }

@@ -15,7 +15,7 @@ struct SuspectedIngredientsSection: View {
     
     var body: some View {
         if productType == .DOUBTFULL || productType == .NON_HALAL {
-            CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity) {
+            CardView(backgroundColor: Color.waraChipBackground, aligment: .leading, width: .infinity) {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Suspected Ingredients:")
                         .font(.title3.weight(.semibold))
@@ -36,7 +36,7 @@ struct SuspectedIngredientsSection: View {
                             ) {
                                 Text("Learn More")
                                     .font(.subheadline.weight(.semibold))
-                                    .foregroundColor(Color("waraPrimary"))
+                                    .foregroundColor(Color.waraPrimary)
                             }
                             .padding(.leading, 6)
                         }
@@ -68,5 +68,5 @@ struct SuspectedIngredientsSection: View {
             ]
         )
     }
-    .background(Color("waraBackground"))
+    .background(Color.waraBackground)
 }

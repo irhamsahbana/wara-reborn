@@ -47,7 +47,7 @@ struct FoodListView: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color("waraCardBackground"))
+                .background(Color.waraCardBackground)
                 .cornerRadius(12)
                 .padding(.horizontal, 16)
                 .padding(.top, -50)
@@ -58,7 +58,7 @@ struct FoodListView: View {
                 
                 Spacer()
             }
-            .background(Color("waraBackground"))
+            .background(Color.waraBackground)
         }
         .scrollIndicators(.hidden)
         .ignoresSafeArea(edges: .top)

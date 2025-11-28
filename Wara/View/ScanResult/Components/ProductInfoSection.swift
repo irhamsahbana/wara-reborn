@@ -20,7 +20,7 @@ struct ProductInfoSection: View {
     let statusMessage: String
     
     var body: some View {
-        CardView(backgroundColor: Color("waraChipBackground"), width: .infinity) {
+        CardView(backgroundColor: Color.waraChipBackground, width: .infinity) {
             VStack {
                 RemoteImageCarouselView(
                     isHalalKMF: isKMF,
@@ -67,5 +67,5 @@ struct ProductInfoSection: View {
             statusMessage: "This product is certified Halal by KMF"
         )
     }
-    .background(Color("waraBackground"))
+    .background(Color.waraBackground)
 }

@@ -143,7 +143,7 @@ struct SubmitProductView: View {
                 
             }
             .buttonStyle(PrimaryButtonStyle(
-                backgroundColor: Color("waraPrimary")
+                backgroundColor: Color.waraPrimary
             ))
             .padding(.horizontal, 16)
         }

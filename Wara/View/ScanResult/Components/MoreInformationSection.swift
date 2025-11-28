@@ -16,7 +16,7 @@ struct MoreInformationSection: View {
     let englishProducent: String
     
     var body: some View {
-        CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity) {
+        CardView(backgroundColor: Color.waraChipBackground, aligment: .leading, width: .infinity) {
             VStack(alignment: .leading, spacing: 0) {
                 Text("More information:")
                     .font(.title3.weight(.semibold))
@@ -73,5 +73,5 @@ struct MoreInformationSection: View {
             englishProducent: "Noodle Tree"
         )
     }
-    .background(Color("waraBackground"))
+    .background(Color.waraBackground)
 }

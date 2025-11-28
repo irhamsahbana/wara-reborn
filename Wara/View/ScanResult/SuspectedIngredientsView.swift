@@ -44,7 +44,7 @@ struct SuspectedIngredientsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     ForEach(Array(suspectedItems.enumerated()), id: \.offset) { _, item in
-                        CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity) {
+                        CardView(backgroundColor: Color.waraChipBackground, aligment: .leading, width: .infinity) {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text(item.englishName)
                                     .font(.headline)
@@ -62,7 +62,7 @@ struct SuspectedIngredientsView: View {
                 .padding(.bottom, 24)
             }
         }
-        .background(Color("waraBackground").ignoresSafeArea())
+        .background(Color.waraBackground.ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
     }

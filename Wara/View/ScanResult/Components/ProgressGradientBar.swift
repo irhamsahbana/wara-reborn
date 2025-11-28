@@ -21,7 +21,7 @@ struct ProgressGradientBar: View {
                 RoundedRectangle(cornerRadius: 8)
                     .fill(
                         LinearGradient(
-                            colors: [Color("waraHalal"), Color("waraAlertYellow")],
+                            colors: [Color.waraHalal, Color.waraAlertYellow],
                             startPoint: .leading,
                             endPoint: .trailing
                         )

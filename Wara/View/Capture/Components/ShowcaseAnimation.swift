@@ -51,7 +51,7 @@ struct ShowcaseAnimation: View {
                     .aspectRatio(contentMode: .fit)
                     .background(
                         Rectangle()
-                            .fill(Color("waraAccent"))
+                            .fill(Color.waraAccent)
                             .cornerRadius(32)
                             .opacity(0.1)
                     )

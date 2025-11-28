@@ -25,7 +25,7 @@ struct FoodDetailView: View {
         self.title = title
         self.description = description ?? "Taste what locals love! Curated Korean food you can enjoy with confidence."
         self.iconURL = iconURL
-        self.headerBackgroundColor = headerBackgroundColor ?? Color("waraSliderYellow")
+        self.headerBackgroundColor = headerBackgroundColor ?? Color.waraSliderYellow
     }
     
     @State private var searchText = ""
@@ -118,7 +118,7 @@ struct FoodDetailView: View {
             
             Spacer()
         }
-        .background(Color("waraBackground"))
+        .background(Color.waraBackground)
         .ignoresSafeArea(edges: .top)
         .navigationBarBackButtonHidden(true)
     }

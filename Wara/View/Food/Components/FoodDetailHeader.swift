@@ -21,7 +21,7 @@ struct FoodDetailHeader: View {
                 LinearGradient(
                     gradient: Gradient(colors: [
                         backgroundColor,
-                        Color("waraSurface")
+                        Color.waraSurface
                     ]),
                     startPoint: .top,
                     endPoint: .bottom
@@ -87,6 +87,6 @@ struct FoodDetailHeader: View {
         title: "Food Souvenirs",
         description: "Taste what locals love! Curated Korean food you can enjoy with confidence.",
         iconURL: nil,
-        backgroundColor: Color("waraSliderYellow")
+        backgroundColor: Color.waraSliderYellow
     )
 }
