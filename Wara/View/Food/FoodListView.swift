@@ -7,6 +7,18 @@
 
 import SwiftUI
 
+/// Main food/home tab showing curated content and recommendations.
+///
+/// **Sections:**
+/// 1. Slider: Featured Korean food items
+/// 2. Scan CTA: Call-to-action card encouraging users to scan products
+/// 3. Category Grid: Browse products by category
+/// 4. Random Favorites: Discover popular halal products
+///
+/// **Layout:**
+/// All content is scrollable vertically with hidden scroll indicators.
+/// The scan card is positioned with negative top padding (-50) to overlap
+/// with the slider for visual depth.
 struct FoodListView: View {
     var body: some View {
         ScrollView{

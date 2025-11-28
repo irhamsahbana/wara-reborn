@@ -1,6 +1,6 @@
 //
-//  HalalLensView.swift
-//  HalalLens
+//  CaptureView.swift
+//  Wara
 //
 //  Created by Immanuel Sitepu on 22/06/25.
 //
@@ -8,6 +8,34 @@
 import PhotosUI
 import SwiftUI
 
+/// Full-screen camera capture view for scanning Korean packaged food labels.
+///
+/// **Features:**
+/// - Live camera preview with real-time ingredient label detection
+/// - Photo capture button for scanning
+/// - Photo picker for importing from gallery
+/// - Flashlight toggle for low-light conditions
+/// - Showcase animation tutorial for first-time users
+/// - Access to saved scanned products
+///
+/// **Scan States:**
+/// - `.idle`: Camera ready, waiting for user action
+/// - `.capturing`: Photo being captured
+/// - `.processing`: OCR and analysis in progress
+/// - `.preview`: Shows detected text overlay with confirmation
+/// - `.success`: Navigates to scan result view
+/// - `.error`: Shows error message with retry option
+///
+/// **Real-time Detection:**
+/// The view shows a green/yellow indicator based on whether ingredient label text
+/// is detected in the live camera feed (powered by `CameraViewModel`).
+///
+/// **User Flow:**
+/// 1. User opens camera → sees live preview
+/// 2. Points camera at back label (ingredient list)
+/// 3. Green indicator when label detected
+/// 4. Taps capture → OCR processing
+/// 5. Confirms detected text → analysis result
 struct CaptureView: View {
     
     @StateObject private var viewModel: CameraViewModel

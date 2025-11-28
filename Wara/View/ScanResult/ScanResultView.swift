@@ -8,6 +8,26 @@
 import SwiftUI
 import UIKit
 
+/// Main coordinator view for displaying scan results.
+///
+/// This view handles two scenarios:
+/// 1. **Front Label Scan**: Shows product candidates when front packaging is detected
+/// 2. **Back Label Scan**: Shows detailed ingredient analysis and product information
+///
+/// **Data Flow:**
+/// - If `scanResultId` is provided → loads existing scan result from API
+/// - If `rawOCRText` is provided → performs new scan analysis
+///
+/// **UI States:**
+/// - Loading: Shows progress animation (0-90% fake progress, 90-100% when complete)
+/// - Error: Displays error message with retry option
+/// - Front Label: Delegates to `ScanResultFrontView` for product selection
+/// - Back Label: Delegates to `ScanResultBackView` for ingredient details
+/// - Unknown: Shows rescan prompt when label type cannot be determined
+///
+/// **Sheets:**
+/// - Contribution sheet: Allows users to suggest edits
+/// - Alternative detail sheet: Shows detailed info for alternative products
 struct ScanResultView: View {
     let onDismiss: () -> Void
     let rawOCRText: String

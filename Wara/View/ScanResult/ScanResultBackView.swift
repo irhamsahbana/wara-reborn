@@ -8,7 +8,23 @@
 import SwiftUI
 import UIKit
 
-/// Main view for displaying back scan results with product details
+/// Displays detailed analysis of back label scan results.
+///
+/// **Layout Structure:**
+/// 1. Product Info: Name, type, KMF status, images
+/// 2. Suspected Ingredients: Red-flagged ingredients based on category
+/// 3. All Ingredients: Complete ingredient list with color coding
+/// 4. Certificate: KMF certificate details (if applicable)
+/// 5. Alternatives: Similar halal products
+/// 6. More Information: Producer details and translations
+///
+/// **Color Coding:**
+/// - Red: Haram/suspected ingredients
+/// - Black: Safe ingredients
+///
+/// **Data Source:**
+/// All data comes from `ScanResultViewModel` which handles API calls
+/// and ingredient analysis.
 struct ScanResultBackView: View {
     @ObservedObject var viewModel: ScanResultViewModel
     let fallbackImage: UIImage?

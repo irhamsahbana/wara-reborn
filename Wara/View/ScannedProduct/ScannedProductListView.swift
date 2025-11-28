@@ -7,6 +7,26 @@
 
 import SwiftUI
 
+/// Displays user's favorited/scanned products in a searchable grid.
+///
+/// **Features:**
+/// - Pull-to-dismiss gesture (swipe down)
+/// - Search bar with debounced API calls (400ms delay)
+/// - Lazy grid with pagination (loads more on scroll)
+/// - Long-press to unfavorite with confirmation dialog
+///
+/// **User Interactions:**
+/// - Tap product → navigates to `ScanResultView`
+/// - Long press (0.5s) → shows unfavorite confirmation
+/// - Swipe down / tap "Back To Scan" → dismisses view
+///
+/// **Pagination:**
+/// Configured with `configureDefaultPaginate(20)` for 20 items per page.
+/// Automatically loads next page when user scrolls near bottom.
+///
+/// **Optimistic UI:**
+/// When unfavoriting, item is removed immediately from UI,
+/// then API call is made in background.
 struct ScannedProductListView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var query: String = ""

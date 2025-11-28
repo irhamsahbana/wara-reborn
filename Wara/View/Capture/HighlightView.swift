@@ -1,6 +1,29 @@
 import SwiftUI
 import UIKit
 
+/// Preview view showing captured image with OCR text detection overlay.
+///
+/// **Purpose:**
+/// After photo capture, this view displays the image with blue highlighted boxes
+/// around detected Korean text regions, allowing users to verify OCR quality
+/// before proceeding to ingredient analysis.
+///
+/// **Technical Details:**
+/// - Uses Vision framework coordinate system (0-1 normalized, origin bottom-left)
+/// - Converts coordinates to SwiftUI coordinate system (origin top-left)
+/// - Applies scale and offset for proper overlay alignment
+/// - Corrects image orientation to `.up` for consistent rendering
+///
+/// **Coordinate Conversion:**
+/// ```
+/// Vision (0,0 = bottom-left) → SwiftUI (0,0 = top-left)
+/// x_swiftui = x_vision * imageWidth * scale + offsetX
+/// y_swiftui = (1 - y_vision) * imageHeight * scale + offsetY
+/// ```
+///
+/// **User Actions:**
+/// - "Re-scan": Dismiss and return to camera
+/// - "Check Product": Proceed to analysis with detected text
 struct HighlightView: View {
     let recognizedTexts: [TextRecognitionResult]
     let originalImage: UIImage
