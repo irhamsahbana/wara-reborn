@@ -12,6 +12,8 @@ struct ScannedProductView: View {
     @State private var query: String = ""
     @StateObject private var viewModel = ScannedProductsViewModel()
     @State private var searchWorkItem: DispatchWorkItem? = nil
+    @State private var itemToUnfavorite: ScannedProductsViewModel.ScannedProductGridItem? = nil
+    @State private var showUnfavoriteDialog = false
 
     var body: some View {
         ScrollView {
@@ -43,6 +45,13 @@ struct ScannedProductView: View {
                             ) {
                                 ScannedProductView.ProductCard(item: item)
                             }
+                            .simultaneousGesture(
+                                LongPressGesture(minimumDuration: 0.5)
+                                    .onEnded { _ in
+                                        itemToUnfavorite = item
+                                        showUnfavoriteDialog = true
+                                    }
+                            )
                             .onAppear {
                                 viewModel.loadNextPageIfNeeded(currentItemId: item.id)
                             }
@@ -56,6 +65,20 @@ struct ScannedProductView: View {
         .navigationTitle("")
         .navigationBarHidden(true)
         .background(Color("background").ignoresSafeArea())
+        .alert("Remove from Favorites", isPresented: $showUnfavoriteDialog) {
+            Button("Cancel", role: .cancel) {
+                itemToUnfavorite = nil
+            }
+            Button("Remove", role: .destructive) {
+                if let item = itemToUnfavorite {
+                    unfavoriteItem(item)
+                }
+            }
+        } message: {
+            if let item = itemToUnfavorite {
+                Text("Remove '\(item.englishName)' from your favorites?")
+            }
+        }
         .onAppear {
             viewModel.configureDefaultPaginate(20)
             viewModel.resetAndLoadInitial(query: "")
@@ -119,6 +142,21 @@ struct ScannedProductView: View {
                 .fill(Color.white)
         )
         .padding(.horizontal, 16)
+    }
+    
+    private func unfavoriteItem(_ item: ScannedProductsViewModel.ScannedProductGridItem) {
+        // Optimistic UI update - remove immediately
+        viewModel.removeItem(id: item.id)
+        
+        // Call API to unfavorite
+        viewModel.toggleFavorite(itemId: item.id, isKmf: item.isKmf) { success in
+            if !success {
+                // If API fails, optionally reload to restore item
+                // viewModel.resetAndLoadInitial(query: query)
+            }
+        }
+        
+        itemToUnfavorite = nil
     }
 }
 

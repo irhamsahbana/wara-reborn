@@ -26,6 +26,7 @@ final class ScannedProductsViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
 
     private let remote = ScanResultsRemoteSource.shared
+    private let altRemote = AlternativeRemoteSource.shared
 
     private var currentQuery: String = ""
     private var currentPage: Int = 1
@@ -144,5 +145,24 @@ final class ScannedProductsViewModel: ObservableObject {
         if let fs = sanitizeURLString(front), let url = URL(string: fs) { return url }
         if let bs = sanitizeURLString(back), let url = URL(string: bs) { return url }
         return nil
+    }
+    
+    func removeItem(id: String) {
+        items.removeAll { $0.id == id }
+    }
+    
+    func toggleFavorite(itemId: String, isKmf: Bool, completion: ((Bool) -> Void)? = nil) {
+        let type = isKmf ? "kmf" : "user"
+        altRemote.toggleFavorite(id: itemId, favoritableType: type) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    completion?(true)
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                    completion?(false)
+                }
+            }
+        }
     }
 }
