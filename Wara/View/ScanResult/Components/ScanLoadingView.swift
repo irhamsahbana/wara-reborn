@@ -13,7 +13,7 @@ struct ScanLoadingView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            Image("girlSearching")
+            Image(ImageAssets.searchingPackagedFood)
                 .resizable()
                 .scaledToFit()
                 .frame(height: 140)

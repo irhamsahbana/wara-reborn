@@ -183,7 +183,7 @@ struct ScannedProductListView: View {
 private extension ScannedProductListView {
     var emptyState: some View {
         VStack(spacing: 16) {
-            Image("girl")
+            Image(ImageAssets.lovePackagedFood)
                 .resizable()
                 .scaledToFit()
                 .frame(height: 160)

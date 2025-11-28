@@ -12,7 +12,7 @@ struct ScanResultUnknownView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Image("girlNotFound")
+            Image(ImageAssets.captureFrontNotFound)
                 .resizable()
                 .scaledToFit()
                 .frame(height: 160)
