@@ -14,7 +14,7 @@ struct BaseView: View {
     var body: some View {
         NavigationStack{
             TabView(selection: $selectedTab) {
-                FoodView()
+                FoodListView()
                     .tabItem {
                         Image(systemName: "fork.knife")
                         Text("Food")

@@ -1,5 +1,5 @@
 //
-//  ScannedProductView.swift
+//  ScannedProductListView.swift
 //  Wara
 //
 //  Created by Meow on 11/11/25
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ScannedProductView: View {
+struct ScannedProductListView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var query: String = ""
     @StateObject private var viewModel = ScannedProductsViewModel()
@@ -43,7 +43,7 @@ struct ScannedProductView: View {
                                     sourceCategory: item.sourceCategory
                                 )
                             ) {
-                                ScannedProductView.ProductCard(item: item)
+                                ScannedProductListView.ProductCard(item: item)
                             }
                             .simultaneousGesture(
                                 LongPressGesture(minimumDuration: 0.5)
@@ -160,7 +160,7 @@ struct ScannedProductView: View {
     }
 }
 
-private extension ScannedProductView {
+private extension ScannedProductListView {
     var emptyState: some View {
         VStack(spacing: 16) {
             Image("girl")
@@ -182,7 +182,7 @@ private extension ScannedProductView {
 
 // MARK: - Nested Types & Components
 
-extension ScannedProductView {
+extension ScannedProductListView {
     struct ProductCard: View {
         let item: ScannedProductsViewModel.ScannedProductGridItem
 
@@ -228,6 +228,6 @@ extension ScannedProductView {
 
 #Preview {
     NavigationStack {
-        ScannedProductView()
+        ScannedProductListView()
     }
 }

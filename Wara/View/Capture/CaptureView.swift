@@ -258,7 +258,7 @@ struct CaptureView: View {
         }
         .fullScreenCover(isPresented: $showScannedProduct) {
             NavigationStack {
-                ScannedProductView()
+                ScannedProductListView()
             }
         }
                     

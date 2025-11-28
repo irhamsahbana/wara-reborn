@@ -1,5 +1,5 @@
 //
-//  RecommendationView.swift
+//  FoodListView.swift
 //  Wara
 //
 //  Created by Meow on 20/10/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FoodView: View {
+struct FoodListView: View {
     var body: some View {
         ScrollView{
             VStack(alignment: .leading, spacing: 0){
@@ -54,5 +54,5 @@ struct FoodView: View {
 }
 
 #Preview {
-    FoodView()
+    FoodListView()
 }
