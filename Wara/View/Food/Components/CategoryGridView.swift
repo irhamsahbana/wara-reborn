@@ -48,7 +48,7 @@ struct CategoryGridView: View {
                             title: category.name,
                             description: category.description,
                             iconURL: category.iconURL,
-                            headerBackgroundColor: Color("sliderGreen")
+                            headerBackgroundColor: Color("waraSliderGreen")
                         )
                     } label: {
                         VStack(alignment: .center, spacing: 6) {

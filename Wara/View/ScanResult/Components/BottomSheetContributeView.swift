@@ -70,7 +70,7 @@ struct BottomSheetContributeView: View {
                 showForm = true
             }
             .buttonStyle(PrimaryButtonStyle(
-                backgroundColor: Color("primaryblue")
+                backgroundColor: Color("waraPrimary")
             ))
             .padding(.top, 4)
             .fullScreenCover(isPresented: $showForm) {

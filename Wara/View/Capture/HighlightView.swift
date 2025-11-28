@@ -107,7 +107,7 @@ struct HighlightView: View {
                             onResult()
                         }
                         .buttonStyle(PrimaryButtonStyle(
-                            backgroundColor: Color("primaryblue")
+                            backgroundColor: Color("waraPrimary")
                         ))
                     }
                     .padding()

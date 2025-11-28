@@ -19,10 +19,10 @@ struct ChipButton: View {
                 .foregroundColor(.primary)
                 .padding(.all, 10)
                 .padding(.horizontal, 4)
-                .background(isSelected ? Color("green1") : Color("chipBackground"))
+                .background(isSelected ? Color("waraSuccess") : Color("waraChipBackground"))
                 .overlay(
                     RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color("green1"), lineWidth: 4)
+                        .stroke(Color("waraSuccess"), lineWidth: 4)
                 )
                 .cornerRadius(20)
         }

@@ -95,11 +95,11 @@ struct FoodCard: View {
                 // Label
                 HStack(spacing: 4) {
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(Color("green2"))
+                        .foregroundColor(Color("waraHalal"))
                         .font(.caption)
                     Text(label)
                         .font(.caption)
-                        .foregroundColor(Color("green2"))
+                        .foregroundColor(Color("waraHalal"))
                 }
                 
                 // Likes count
@@ -115,10 +115,10 @@ struct FoodCard: View {
             .padding(.horizontal, 8)
             .padding(.bottom, 8)
         }
-        .background(Color("chipBackground"))
+        .background(Color("waraChipBackground"))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(Color("green2").opacity(0.4), lineWidth: 6)
+                .stroke(Color("waraHalal").opacity(0.4), lineWidth: 6)
         )
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)

@@ -42,7 +42,7 @@ struct CameraPermissionView: View {
                         .multilineTextAlignment(.center)
                     
                     Text("Allow camera access to scan Korean food packages around you.")
-                        .foregroundColor(Color("MutedText"))
+                        .foregroundColor(Color("waraMutedText"))
                         .font(.callout)
                         .multilineTextAlignment(.center)
                 }
@@ -55,7 +55,7 @@ struct CameraPermissionView: View {
             }
             .buttonStyle(
                 PrimaryButtonStyle(
-                    backgroundColor: Color("primaryblue"),
+                    backgroundColor: Color("waraPrimary"),
                     cornerRadius: 28
                 )
             )
@@ -64,7 +64,7 @@ struct CameraPermissionView: View {
             .padding(.bottom, 24)
         }
         .padding()
-        .background(Color("background").ignoresSafeArea())
+        .background(Color("waraBackground").ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
     }
 }

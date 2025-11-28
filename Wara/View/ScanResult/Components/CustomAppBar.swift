@@ -60,7 +60,7 @@ struct CustomAppBar: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-        .background(Color("surfaceCustomAppBar"))
+        .background(Color("waraSurfaceAppBar"))
     }
 }
 

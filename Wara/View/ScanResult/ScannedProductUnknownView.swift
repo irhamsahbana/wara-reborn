@@ -27,7 +27,7 @@ struct ScanResultUnknownView: View {
                 Button("Re-scan") {
                     onRescan()
                 }
-                .buttonStyle(PrimaryButtonStyle(backgroundColor: Color("primaryblue")))
+                .buttonStyle(PrimaryButtonStyle(backgroundColor: Color("waraPrimary")))
                 .padding(.horizontal, 16)
             }
         }

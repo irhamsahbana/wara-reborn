@@ -53,7 +53,7 @@ struct OnboardingView: View {
                         }
                         .buttonStyle(
                             PrimaryButtonStyle(
-                                backgroundColor: Color("primaryblue"),
+                                backgroundColor: Color("waraPrimary"),
                                 cornerRadius: 28
                             )
                         )
@@ -68,7 +68,7 @@ struct OnboardingView: View {
                         }
                         .buttonStyle(
                             PrimaryButtonStyle(
-                                backgroundColor: Color("primaryblue"),
+                                backgroundColor: Color("waraPrimary"),
                                 cornerRadius: 28
                             )
                         )
@@ -78,7 +78,7 @@ struct OnboardingView: View {
                     }
                 }
             }
-            .background(Color("background").ignoresSafeArea())
+            .background(Color("waraBackground").ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(true)
         }

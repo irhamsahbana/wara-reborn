@@ -82,7 +82,7 @@ struct AlternativeDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                CardView(backgroundColor: Color("chipBackground"), width: .infinity) {
+                CardView(backgroundColor: Color("waraChipBackground"), width: .infinity) {
                     VStack {
                         RemoteImageCarouselView(
                             isHalalKMF: isKMF,
@@ -116,7 +116,7 @@ struct AlternativeDetailView: View {
 
                 // Suspected ingredients (if applicable)
                 if productType == .DOUBTFULL || productType == .NON_HALAL {
-                    CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
+                    CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity){
                         VStack(alignment: .leading, spacing: 12){
                             Text("Suspected Ingredients:")
                                 .font(.title3.weight(.semibold))
@@ -135,7 +135,7 @@ struct AlternativeDetailView: View {
                                     ) {
                                         Text("Learn More")
                                             .font(.subheadline.weight(.semibold))
-                                            .foregroundColor(Color("primaryblue"))
+                                            .foregroundColor(Color("waraPrimary"))
                                     }
                                     .padding(.leading, 6)
                                 }
@@ -147,7 +147,7 @@ struct AlternativeDetailView: View {
                 }
 
                 // Ingredients + Unknown + Facility
-                CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
+                CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity){
                     VStack(alignment: .leading, spacing: 8){
                         Text("Ingredients:")
                             .font(.title3.weight(.semibold))
@@ -190,7 +190,7 @@ struct AlternativeDetailView: View {
                 .padding(.horizontal, 16)
 
                 // Certificate and share section
-                CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
+                CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity){
                     if isKMF {
                         VStack(alignment: .leading, spacing: 12){
                             Text("Certificate No:")
@@ -228,7 +228,7 @@ struct AlternativeDetailView: View {
                 .padding(.horizontal, 16)
 
                 // More information at the end
-                CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
+                CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity){
                     VStack(alignment: .leading){
                         Text("More information:")
                             .font(.title3.weight(.semibold))
@@ -266,7 +266,7 @@ struct AlternativeDetailView: View {
                 .padding(.horizontal, 16)
 
                 if productType == .DOUBTFULL || productType == .NON_HALAL {
-                    CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity){
+                    CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity){
                         VStack(alignment: .leading, spacing: 12){
                             Text("Suspected Ingredients:")
                                 .font(.title3.weight(.semibold))
@@ -285,7 +285,7 @@ struct AlternativeDetailView: View {
                                     ) {
                                         Text("Learn More")
                                             .font(.subheadline.weight(.semibold))
-                                            .foregroundColor(Color("primaryblue"))
+                                            .foregroundColor(Color("waraPrimary"))
                                     }
                                     .padding(.leading, 6)
                                 }

@@ -28,11 +28,11 @@ struct ScanResultFrontView: View {
         NavigationView {
             VStack(spacing: 16) {
                 CustomAppBar(title: "Result", onBack: { onBack() }, onFavorite: {}, isFavoriteEnabled: false)
-                    .background(Color("background"))
+                    .background(Color("waraBackground"))
 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
-                        CardView(backgroundColor: Color("chipBackground"), aligment: .center, width: .infinity) {
+                        CardView(backgroundColor: Color("waraChipBackground"), aligment: .center, width: .infinity) {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(Color.white)
@@ -114,7 +114,7 @@ struct ScanResultFrontView: View {
             Button("Capture Back Packaging") {
                 onCaptureBack()
             }
-            .buttonStyle(PrimaryButtonStyle(backgroundColor: Color("primaryblue")))
+            .buttonStyle(PrimaryButtonStyle(backgroundColor: Color("waraPrimary")))
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
             .background(Color(.systemGroupedBackground))

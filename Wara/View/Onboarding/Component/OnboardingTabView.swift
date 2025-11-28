@@ -28,7 +28,7 @@ struct OnboardingTabView: View {
             
             Text(description)
                 .font(.callout)
-                .foregroundColor(.mutedText)
+                .foregroundColor(.waraMutedText)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
         }

@@ -59,7 +59,7 @@ struct ResultInfoCard: View {
                 InfoCard(
                     title: ProductType.HALAL.rawValue,
                     description: statusMessage.isEmpty ? "No haram ingredient found" : statusMessage,
-                    color: Color("green2"),
+                    color: Color("waraHalal"),
                     icon: "checkmark"
                 )
             }
@@ -68,7 +68,7 @@ struct ResultInfoCard: View {
                 InfoCard(
                     title: ProductType.SAFE_TO_CONSUME.rawValue,
                     description: statusMessage.isEmpty ? "No haram ingredient found" : statusMessage,
-                    color: Color("green2"),
+                    color: Color("waraHalal"),
                     icon: "checkmark"
                 )
             }
@@ -77,7 +77,7 @@ struct ResultInfoCard: View {
                 InfoCard(
                     title: ProductType.DOUBTFULL.rawValue,
                     description: statusMessage.isEmpty ? "Requires further checking" : statusMessage,
-                    color: Color("yellow"),
+                    color: Color("waraAlertYellow"),
                     icon: "exclamationmark"
                 )
             }
@@ -86,7 +86,7 @@ struct ResultInfoCard: View {
                 InfoCard(
                     title: ProductType.NON_HALAL.rawValue,
                     description: statusMessage.isEmpty ? "Contains forbidden ingredients" : statusMessage,
-                    color: Color("red"),
+                    color: Color("waraAlertRed"),
                     icon: "xmark"
                 )
             }

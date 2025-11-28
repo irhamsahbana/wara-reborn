@@ -16,7 +16,7 @@ struct IngredientsSection: View {
     let facilityInfo: String
     
     var body: some View {
-        CardView(backgroundColor: Color("chipBackground"), aligment: .leading, width: .infinity) {
+        CardView(backgroundColor: Color("waraChipBackground"), aligment: .leading, width: .infinity) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Ingredients:")
                     .font(.title3.weight(.semibold))
@@ -86,5 +86,5 @@ struct IngredientsSection: View {
             facilityInfo: "This product is manufactured in a facility that also processes milk, eggs, and soybeans"
         )
     }
-    .background(Color("background"))
+    .background(Color("waraBackground"))
 }
