@@ -65,13 +65,14 @@ struct ScannedProductListView: View {
                             ) {
                                 ScannedProductListView.ProductCard(item: item)
                             }
-                            .simultaneousGesture(
-                                LongPressGesture(minimumDuration: 0.5)
-                                    .onEnded { _ in
-                                        itemToUnfavorite = item
-                                        showUnfavoriteDialog = true
-                                    }
-                            )
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    itemToUnfavorite = item
+                                    showUnfavoriteDialog = true
+                                } label: {
+                                    Label("Remove from Saved", systemImage: "heart.slash")
+                                }
+                            }
                             .onAppear {
                                 viewModel.loadNextPageIfNeeded(currentItemId: item.id)
                             }
@@ -85,18 +86,24 @@ struct ScannedProductListView: View {
         .navigationTitle("")
         .navigationBarHidden(true)
         .background(Color.waraBackground.ignoresSafeArea())
-        .alert("Remove from Favorites", isPresented: $showUnfavoriteDialog) {
-            Button("Cancel", role: .cancel) {
-                itemToUnfavorite = nil
-            }
-            Button("Remove", role: .destructive) {
-                if let item = itemToUnfavorite {
-                    unfavoriteItem(item)
-                }
-            }
-        } message: {
-            if let item = itemToUnfavorite {
-                Text("Remove '\(item.englishName)' from your favorites?")
+        .overlay {
+            if showUnfavoriteDialog, let item = itemToUnfavorite {
+                CustomAlertView(
+                    title: "Remove from Saved Products",
+                    message: "Remove '\(item.englishName)' from your saved products?",
+                    cancelText: "Cancel",
+                    destructiveText: "Remove",
+                    onCancel: {
+                        itemToUnfavorite = nil
+                        showUnfavoriteDialog = false
+                    },
+                    onDestructive: {
+                        unfavoriteItem(item)
+                        showUnfavoriteDialog = false
+                    }
+                )
+                .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                .animation(.easeInOut(duration: 0.2), value: showUnfavoriteDialog)
             }
         }
         .onAppear {
