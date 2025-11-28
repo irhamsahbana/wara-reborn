@@ -15,6 +15,7 @@ struct RemoteImageCarouselView: View {
 
     @State private var currentIndex = 0
     @State private var showFullscreen = false
+    @State private var dragOffset: CGFloat = 0
 
     var body: some View {
         ZStack {
@@ -34,6 +35,30 @@ struct RemoteImageCarouselView: View {
                         placeholderColor: Color.white
                     )
                     .frame(width: 160, height: 200)
+                    .offset(x: dragOffset)
+                    .gesture(
+                        DragGesture()
+                            .onChanged { value in
+                                dragOffset = value.translation.width
+                            }
+                            .onEnded { value in
+                                let threshold: CGFloat = 50
+                                withAnimation(.easeOut(duration: 0.3)) {
+                                    if value.translation.width < -threshold {
+                                        // Swipe left - next image (infinite loop)
+                                        goToNext()
+                                        dragOffset = 0
+                                    } else if value.translation.width > threshold {
+                                        // Swipe right - previous image (infinite loop)
+                                        goToPrevious()
+                                        dragOffset = 0
+                                    } else {
+                                        // Not enough swipe, reset
+                                        dragOffset = 0
+                                    }
+                                }
+                            }
+                    )
                     .onTapGesture {
                         showFullscreen = true
                     }
@@ -42,6 +67,18 @@ struct RemoteImageCarouselView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 160, height: 200)
+                        .offset(x: dragOffset)
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    dragOffset = value.translation.width
+                                }
+                                .onEnded { value in
+                                    withAnimation(.easeOut(duration: 0.3)) {
+                                        dragOffset = 0
+                                    }
+                                }
+                        )
                         .onTapGesture {
                             showFullscreen = true
                         }
@@ -72,9 +109,8 @@ struct RemoteImageCarouselView: View {
             if imageURLs.count > 1 {
                 HStack {
                     Button(action: {
-                        withAnimation {
-                            guard !imageURLs.isEmpty else { return }
-                            currentIndex = (currentIndex - 1 + imageURLs.count) % imageURLs.count
+                        withAnimation(.easeOut(duration: 0.3)) {
+                            goToPrevious()
                         }
                     }) {
                         Image(systemName: "chevron.left")
@@ -86,9 +122,8 @@ struct RemoteImageCarouselView: View {
                     Spacer()
 
                     Button(action: {
-                        withAnimation {
-                            guard !imageURLs.isEmpty else { return }
-                            currentIndex = (currentIndex + 1) % imageURLs.count
+                        withAnimation(.easeOut(duration: 0.3)) {
+                            goToNext()
                         }
                     }) {
                         Image(systemName: "chevron.right")
@@ -111,6 +146,18 @@ struct RemoteImageCarouselView: View {
                 isPresented: $showFullscreen
             )
         }
+    }
+    
+    // MARK: - Navigation Helpers
+    
+    private func goToNext() {
+        guard !imageURLs.isEmpty else { return }
+        currentIndex = (currentIndex + 1) % imageURLs.count
+    }
+    
+    private func goToPrevious() {
+        guard !imageURLs.isEmpty else { return }
+        currentIndex = (currentIndex - 1 + imageURLs.count) % imageURLs.count
     }
 }
 
