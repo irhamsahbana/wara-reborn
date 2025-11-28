@@ -15,9 +15,9 @@ struct ScanResultFrontView: View {
     let fallbackImage: UIImage?
     let candidates: [ProductCandidateDTO]
 
-    @StateObject private var viewModel = ScannedProductsViewModel()
     @StateObject private var scanResultViewModel = ScanResultViewModel()
     @State private var showAlternativeDetail = false
+    @State private var productCandidates: [ProductCandidateDTO] = []
 
     private let columns = [
         GridItem(.flexible(), spacing: 12),
@@ -63,7 +63,7 @@ struct ScanResultFrontView: View {
                             .foregroundColor(.primary)
                             .padding(.horizontal, 16)
 
-                        if viewModel.items.isEmpty {
+                        if productCandidates.isEmpty {
                             VStack(spacing: 16) {
                                 Image("girlNotFound")
                                     .resizable()
@@ -82,22 +82,22 @@ struct ScanResultFrontView: View {
                             .padding(.bottom, 24)
                         } else {
                             LazyVGrid(columns: columns, spacing: 12) {
-                                ForEach(viewModel.items) { item in
+                                ForEach(productCandidates) { candidate in
                                     AlternativeProductCard(
-                                        id: item.id,
-                                        title: item.englishName,
-                                        subtitle: item.category,
-                                        imageURL: item.imageURL,
-                                        isHalalKMF: item.isKmf,
-                                        isFavorited: getAlternativeItem(id: item.id)?.isFavorited ?? false,
-                                        likes: getAlternativeItem(id: item.id)?.favoriteCounter ?? 0,
+                                        id: candidate.id,
+                                        title: candidate.englishName ?? "",
+                                        subtitle: candidate.koreanCategory ?? candidate.englishCategory ?? "",
+                                        imageURL: URL(string: candidate.frontCoverURL ?? ""),
+                                        isHalalKMF: candidate.isKmf ?? false,
+                                        isFavorited: candidate.isFavorited ?? false,
                                         onFavoriteTapped: {
-                                            scanResultViewModel.toggleFavorite(itemId: item.id, isKmf: item.isKmf)
+                                            toggleFavorite(candidateId: candidate.id ?? "")
                                         }
                                     )
                                     .frame(maxWidth: .infinity)
                                     .onTapGesture {
-                                        scanResultViewModel.loadAlternativeDetail(id: item.id, isKmf: item.isKmf) { _ in
+                                        let isKmf = candidate.isKmf ?? false
+                                        scanResultViewModel.loadAlternativeDetail(id: candidate.id ?? "", isKmf: isKmf) { _ in
                                             showAlternativeDetail = true
                                         }
                                     }
@@ -137,22 +137,29 @@ struct ScanResultFrontView: View {
             .presentationDragIndicator(.visible)
         }
         .onAppear {
-            viewModel.loadCandidates(candidates)
-            scanResultViewModel.loadAlternativesFromCandidates(candidates)
+            productCandidates = candidates
         }
     }
     
-    private func getAlternativeItem(id: String) -> AlternativeProductItemDTO? {
-        scanResultViewModel.alternativeItems.first(where: { $0.id == id })
+    private func toggleFavorite(candidateId: String) {
+        guard let index = productCandidates.firstIndex(where: { $0.id == candidateId }) else { return }
+        let candidate = productCandidates[index]
+        let isKmf = candidate.isKmf ?? false
+        
+        // Update local state immediately for UI responsiveness
+        productCandidates[index].isFavorited = !(candidate.isFavorited ?? false)
+        
+        // Call API to toggle favorite in background
+        scanResultViewModel.toggleFavorite(itemId: candidateId, isKmf: isKmf)
     }
 }
 
 #Preview {
     let items: [ProductCandidateDTO] = [
-        ProductCandidateDTO(id: "1", englishName: "Strawberry Sticky Rice Cake", englishCategory: "Rice Cake", koreanCategory: nil, frontCoverURL: "https://picsum.photos/200/200?1", backCoverURL: nil, isKmf: true, status: "kmf_certified"),
-        ProductCandidateDTO(id: "2", englishName: "Mango Sticky Rice Cake", englishCategory: "Rice Cake", koreanCategory: nil, frontCoverURL: "https://picsum.photos/200/200?2", backCoverURL: nil, isKmf: true, status: "kmf_certified"),
-        ProductCandidateDTO(id: "3", englishName: "Melon Sticky Rice Cake", englishCategory: "Rice Cake", koreanCategory: nil, frontCoverURL: "https://picsum.photos/200/200?3", backCoverURL: nil, isKmf: true, status: "safe"),
-        ProductCandidateDTO(id: "4", englishName: "Blueberry Sticky Rice Cake", englishCategory: "Rice Cake", koreanCategory: nil, frontCoverURL: "https://picsum.photos/200/200?4", backCoverURL: nil, isKmf: true, status: "safe")
+        ProductCandidateDTO(id: "1", englishName: "Strawberry Sticky Rice Cake", englishCategory: "Rice Cake", koreanCategory: nil, frontCoverURL: "https://picsum.photos/200/200?1", backCoverURL: nil, isKmf: true, status: "kmf_certified", isFavorited: false),
+        ProductCandidateDTO(id: "2", englishName: "Mango Sticky Rice Cake", englishCategory: "Rice Cake", koreanCategory: nil, frontCoverURL: "https://picsum.photos/200/200?2", backCoverURL: nil, isKmf: true, status: "kmf_certified", isFavorited: true),
+        ProductCandidateDTO(id: "3", englishName: "Melon Sticky Rice Cake", englishCategory: "Rice Cake", koreanCategory: nil, frontCoverURL: "https://picsum.photos/200/200?3", backCoverURL: nil, isKmf: true, status: "safe", isFavorited: false),
+        ProductCandidateDTO(id: "4", englishName: "Blueberry Sticky Rice Cake", englishCategory: "Rice Cake", koreanCategory: nil, frontCoverURL: "https://picsum.photos/200/200?4", backCoverURL: nil, isKmf: true, status: "safe", isFavorited: true)
     ]
-    return ScanResultFrontView(onBack: {}, onCaptureBack: {}, imageURL: URL(string: "https://picsum.photos/300/200"), fallbackImage: nil, candidates: items)
+    ScanResultFrontView(onBack: {}, onCaptureBack: {}, imageURL: URL(string: "https://picsum.photos/300/200"), fallbackImage: nil, candidates: items)
 }

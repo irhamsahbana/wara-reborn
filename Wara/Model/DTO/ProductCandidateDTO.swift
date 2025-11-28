@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProductCandidateDTO: Decodable, Identifiable {
+struct ProductCandidateDTO: Codable, Identifiable {
     let id: String?
     let englishName: String?
     let englishCategory: String?
@@ -16,6 +16,7 @@ struct ProductCandidateDTO: Decodable, Identifiable {
     let backCoverURL: String?
     let isKmf: Bool?
     let status: String?
+    var isFavorited: Bool?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -26,5 +27,6 @@ struct ProductCandidateDTO: Decodable, Identifiable {
         case backCoverURL = "back_cover_url"
         case isKmf = "is_kmf"
         case status
+        case isFavorited = "is_favorited"
     }
 }

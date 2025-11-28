@@ -301,7 +301,6 @@ struct ScanResultView: View {
                                                         imageURL: URL(string: item.frontCoverURL ?? ""),
                                                         isHalalKMF: item.isKmf,
                                                         isFavorited: item.isFavorited,
-                                                        likes: item.favoriteCounter,
                                                         onFavoriteTapped: {
                                                             viewModel.toggleFavorite(itemId: item.id, isKmf: item.isKmf)
                                                         }

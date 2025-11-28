@@ -286,10 +286,11 @@ class ScanResultViewModel: ObservableObject {
         alternativeItems = candidates.compactMap { candidate -> AlternativeProductItemDTO? in
             guard let id = candidate.id else { return nil }
             let isKmf = candidate.isKmf ?? false
+            let isFavorited = candidate.isFavorited ?? false
             return AlternativeProductItemDTO(
                 id: id,
                 isKmf: isKmf,
-                isFavorited: false,
+                isFavorited: isFavorited,
                 englishCategory: candidate.englishCategory ?? "",
                 koreanCategory: candidate.koreanCategory ?? "",
                 englishName: candidate.englishName ?? "",

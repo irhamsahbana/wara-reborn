@@ -14,7 +14,6 @@ struct AlternativeProductCard: View {
     let imageURL: URL?
     let isHalalKMF: Bool
     let isFavorited: Bool
-    let likes: Int
     let onFavoriteTapped: (() -> Void)?
     let width: CGFloat = 160
     let height: CGFloat = 220
@@ -67,15 +66,6 @@ struct AlternativeProductCard: View {
                             .foregroundColor(Color("green2"))
                     }
                 }
-
-                HStack(spacing: 4) {
-                    Image(systemName: "heart")
-                        .foregroundColor(.primary)
-                        .font(.caption)
-                    Text("\(likes)")
-                        .font(.caption)
-                        .foregroundColor(.primary)
-                }
             }
             .padding(.horizontal, 8)
             .padding(.bottom, 8)
@@ -101,7 +91,6 @@ struct AlternativeProductCard: View {
         imageURL: URL(string: "https://picsum.photos/200/100"),
         isHalalKMF: true,
         isFavorited: false,
-        likes: 384,
         onFavoriteTapped: {}
     )
 }
