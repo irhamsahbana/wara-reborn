@@ -45,7 +45,6 @@ struct AlternativeProductCard: View {
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
                     .truncationMode(.tail)
-                    .frame(maxWidth: .infinity, alignment: .leading)
 
                 if !subtitle.isEmpty {
                     Text(subtitle)
@@ -53,8 +52,9 @@ struct AlternativeProductCard: View {
                         .foregroundColor(.primary)
                         .lineLimit(1)
                         .truncationMode(.tail)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                
+                Spacer(minLength: 0)
 
                 if isHalalKMF {
                     HStack(spacing: 4) {
@@ -77,9 +77,8 @@ struct AlternativeProductCard: View {
         )
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
-        .frame(width: width)
-        .frame(height: height)
-        .clipped()
+        .frame(width: width, height: height)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }
 
