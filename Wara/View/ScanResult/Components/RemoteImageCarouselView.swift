@@ -14,6 +14,7 @@ struct RemoteImageCarouselView: View {
     let fallbackImage: UIImage?
 
     @State private var currentIndex = 0
+    @State private var showFullscreen = false
 
     var body: some View {
         ZStack {
@@ -33,11 +34,17 @@ struct RemoteImageCarouselView: View {
                         placeholderColor: Color.white
                     )
                     .frame(width: 160, height: 200)
+                    .onTapGesture {
+                        showFullscreen = true
+                    }
                 } else if let local = fallbackImage {
                     Image(uiImage: local)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 160, height: 200)
+                        .onTapGesture {
+                            showFullscreen = true
+                        }
                 } else {
                     Image(systemName: "photo")
                         .resizable()
@@ -96,6 +103,14 @@ struct RemoteImageCarouselView: View {
             
         }
         .frame(width: 288, height: 276)
+        .fullScreenCover(isPresented: $showFullscreen) {
+            FullscreenImageView(
+                imageURLs: imageURLs,
+                fallbackImage: fallbackImage,
+                initialIndex: currentIndex,
+                isPresented: $showFullscreen
+            )
+        }
     }
 }
 
