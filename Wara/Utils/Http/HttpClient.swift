@@ -68,6 +68,21 @@ class HttpClient {
                     case .success(let value):
                         completion(.success(value))
                     case .failure(let afError):
+                        // Handle no internet connection
+                        if let urlError = afError.underlyingError as? URLError,
+                           urlError.code == .notConnectedToInternet || 
+                           urlError.code == .networkConnectionLost ||
+                           urlError.code == .dataNotAllowed {
+                            completion(.failure(.noInternetConnection))
+                            return
+                        }
+                        
+                        // Handle HTTP 500 server errors
+                        if let statusCode = response.response?.statusCode, statusCode >= 500 {
+                            completion(.failure(.serverError))
+                            return
+                        }
+                        
                         if (response.response?.statusCode == 400), let data = response.data {
                             do {
                                 let envelope = try JSONDecoder().decode(ApiResponseDTO<EmptyDTO>.self, from: data)

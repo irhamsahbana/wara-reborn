@@ -13,6 +13,7 @@ enum ImageAssets {
     static let lovePackagedFood = "wara_love_packaged_food"
     static let searchingPackagedFood = "wara_searching_packaged_food"
     static let captureFrontNotFound = "wara_capture_front_not_found"
+    static let serverError = "wara_server_error"
     
     // MARK: - Onboarding Images
     static let onboarding1 = "onboarding_1"
