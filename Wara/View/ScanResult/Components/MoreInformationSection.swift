@@ -10,6 +10,7 @@ import SwiftUI
 /// Section displaying additional product information (name, category, company)
 struct MoreInformationSection: View {
     let koreanNameWithPronunciation: String
+    let englishName: String
     let englishProductCategory: String
     let koreanProducent: String
     let englishProducent: String
@@ -30,6 +31,14 @@ struct MoreInformationSection: View {
                     .foregroundColor(.primary)
 
                 Text("English Translation:")
+                    .font(.subheadline)
+                    .foregroundColor(.primary)
+                    .padding(.top, 8)
+                Text(englishName)
+                    .font(.body)
+                    .foregroundColor(.primary)
+
+                Text("Category:")
                     .font(.subheadline)
                     .foregroundColor(.primary)
                     .padding(.top, 8)
@@ -58,6 +67,7 @@ struct MoreInformationSection: View {
     ScrollView {
         MoreInformationSection(
             koreanNameWithPronunciation: "딸기 찹쌀떡 (ttal-gi chap-ssal-tteok)",
+            englishName: "Strawberry Sticky Rice Cake",
             englishProductCategory: "Rice Cake",
             koreanProducent: "누들트리",
             englishProducent: "Noodle Tree"

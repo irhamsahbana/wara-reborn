@@ -94,6 +94,7 @@ struct ScanResultBackView: View {
             // More Information
             MoreInformationSection(
                 koreanNameWithPronunciation: viewModel.koreanNameWithPronunciation,
+                englishName: viewModel.englishName,
                 englishProductCategory: viewModel.englishProductCategory,
                 koreanProducent: viewModel.koreanProducent,
                 englishProducent: viewModel.englishProducent
