@@ -242,7 +242,7 @@ struct CaptureView: View {
                     },
                     onDismiss: viewModel.resetState
                 )
-            case .success(let result):
+            case .success(_):
                 ScanResultView(
                     onDismiss: viewModel.resetState,
                     rawOCRText: viewModel.lastCombinedOCRText,

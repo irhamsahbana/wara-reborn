@@ -146,7 +146,7 @@ struct ScannedProductListView: View {
                 .textFieldStyle(.plain)
                 .font(.body.weight(.medium))
                 .foregroundColor(.gray)
-                .onChange(of: query) { newValue in
+                .onChange(of: query) { oldValue, newValue in
                     searchWorkItem?.cancel()
                     let work = DispatchWorkItem { [weak viewModel] in
                         viewModel?.resetAndLoadInitial(query: newValue)

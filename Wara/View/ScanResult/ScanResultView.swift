@@ -123,8 +123,8 @@ struct ScanResultView: View {
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
-        .onChange(of: viewModel.isLoading) { isLoading in
-            if isLoading {
+        .onChange(of: viewModel.isLoading) { oldValue, newValue in
+            if newValue {
                 startLoadingProgress()
             } else {
                 withAnimation(.easeInOut(duration: 0.3)) {
@@ -136,23 +136,26 @@ struct ScanResultView: View {
     }
     
     // MARK: - Loading Progress Helpers
+    @MainActor
     private func startLoadingProgress() {
         loadingTimer?.invalidate()
         loadingProgress = 0.0
-        loadingTimer = Timer.scheduledTimer(withTimeInterval: 0.06, repeats: true) { timer in
-            // Fill up to 90% while loading, then hold
-            if viewModel.isLoading {
-                let target = 0.90
-                if loadingProgress < target {
-                    loadingProgress = min(target, loadingProgress + 0.015)
+        loadingTimer = Timer.scheduledTimer(withTimeInterval: 0.06, repeats: true) { [weak viewModel] timer in
+            Task { @MainActor in
+                // Fill up to 90% while loading, then hold
+                if viewModel?.isLoading == true {
+                    let target = 0.90
+                    if loadingProgress < target {
+                        loadingProgress = min(target, loadingProgress + 0.015)
+                    } else {
+                        loadingProgress = target
+                    }
                 } else {
-                    loadingProgress = target
+                    // Complete to 100% when finished
+                    loadingProgress = 1.0
+                    timer.invalidate()
+                    loadingTimer = nil
                 }
-            } else {
-                // Complete to 100% when finished
-                loadingProgress = 1.0
-                timer.invalidate()
-                loadingTimer = nil
             }
         }
     }

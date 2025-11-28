@@ -87,11 +87,11 @@ struct SliderView: View {
             .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .never))
             .frame(maxHeight: 250)
             .padding(.top, -70)
-            .onChange(of: viewModel.items.count) { count in
-                if count == 0 {
+            .onChange(of: viewModel.items.count) { oldValue, newValue in
+                if newValue == 0 {
                     currentIndex = 0
-                } else if currentIndex >= count {
-                    currentIndex = max(0, count - 1)
+                } else if currentIndex >= newValue {
+                    currentIndex = max(0, newValue - 1)
                 }
             }
             
