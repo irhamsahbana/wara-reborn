@@ -228,6 +228,7 @@ extension ScannedProductListView {
                     .font(.subheadline.weight(.medium))
                     .foregroundColor(.primary)
                     .lineLimit(2)
+                    .multilineTextAlignment(.leading)
 
                 Text(item.category)
                     .font(.caption)

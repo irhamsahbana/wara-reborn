@@ -40,7 +40,7 @@ extension ProductTypeV2 {
 
     var labelIcon: String {
         switch self {
-        case .kmf_certified: return "leaf.fill"
+        case .kmf_certified: return "checkmark.circle.fill"
         case .no_haram: return "checkmark.circle.fill"
         case .doubtful: return "exclamationmark.triangle.fill"
         case .haram: return "xmark.octagon.fill"

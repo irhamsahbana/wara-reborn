@@ -13,6 +13,7 @@ struct WaraApp: App {
     let persistenceController = PersistenceController.shared
     
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding: Bool = false
+    @State private var shouldShowCaptureView: Bool = false
 
     init() {
         // Initialize user at app launch (skip during SwiftUI Previews)
@@ -20,10 +21,20 @@ struct WaraApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if hasCompletedOnboarding {
+            if hasCompletedOnboarding || shouldShowCaptureView {
                 CaptureView()
+                    .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("OpenScanView"))) { _ in
+                        // Handle App Intent to show capture view
+                        shouldShowCaptureView = true
+                        hasCompletedOnboarding = true
+                    }
             } else {
                 OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
+                    .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("OpenScanView"))) { _ in
+                        // Handle App Intent to show capture view
+                        shouldShowCaptureView = true
+                        hasCompletedOnboarding = true
+                    }
             }
         }
         // .modelContainer(persistenceController.container)

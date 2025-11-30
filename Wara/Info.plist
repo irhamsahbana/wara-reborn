@@ -8,5 +8,9 @@
 <string>$(API_SCHEME)</string>
 <key>API_HOST</key>
 <string>$(API_HOST)</string>
+<key>NSUserActivityTypes</key>
+<array>
+<string>ScanProductIntent</string>
+</array>
 </dict>
 </plist>
