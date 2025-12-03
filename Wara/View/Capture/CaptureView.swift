@@ -65,6 +65,7 @@ struct CaptureView: View {
     }
     
     var body: some View {
+        GeometryReader { geo in
         ZStack {
             CameraView(viewModel: viewModel)
                 .ignoresSafeArea()
@@ -251,6 +252,15 @@ struct CaptureView: View {
             case .error(let message):
                 ErrorView(message: message, onDismiss: viewModel.resetState)
             }
+        }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 20)
+                .onEnded { value in
+                    if !areControlsHidden && value.translation.height < -30 && value.startLocation.y > geo.size.height * 0.6 {
+                        showScannedProduct = true
+                    }
+                }
+        )
         }
         .background(.black)
         .animation(.bouncy, value: viewModel.isIngredientLabelDectected)
