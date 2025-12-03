@@ -34,10 +34,19 @@ struct ScannedProductListView: View {
     @State private var searchWorkItem: DispatchWorkItem? = nil
     @State private var itemToUnfavorite: ScannedProductsViewModel.ScannedProductGridItem? = nil
     @State private var showUnfavoriteDialog = false
+    @State private var hasInitialized = false
+    @State private var isAtTop = true
+    @State private var isDragging = false
+    @State private var wasAtTopAtDragStart = false
+    @State private var latestScrollY: CGFloat = 0
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
+                GeometryReader { proxy in
+                    Color.clear.preference(key: ScrollOffsetPreferenceKey.self, value: proxy.frame(in: .named("scannedScroll")).minY)
+                }
+                .frame(height: 0)
                 header
                 searchBar
 
@@ -56,7 +65,7 @@ struct ScannedProductListView: View {
                         ForEach(viewModel.items) { item in
                             NavigationLink(
                                 destination: ScanResultView(
-                                    onDismiss: { dismiss() },
+                                    onDismiss: {},
                                     rawOCRText: "",
                                     fallbackImage: nil,
                                     scanResultId: item.id,
@@ -83,6 +92,29 @@ struct ScannedProductListView: View {
             }
             .padding(.top, 8)
         }
+        .coordinateSpace(name: "scannedScroll")
+        .refreshable {
+            dismiss()
+        }
+        .onPreferenceChange(ScrollOffsetPreferenceKey.self) { y in
+            latestScrollY = y
+            isAtTop = y >= 0
+        }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 10)
+                .onChanged { _ in
+                    if !isDragging {
+                        isDragging = true
+                        wasAtTopAtDragStart = isAtTop
+                    }
+                }
+                .onEnded { value in
+                    if wasAtTopAtDragStart && value.translation.height > 30 && latestScrollY > 0 {
+                        dismiss()
+                    }
+                    isDragging = false
+                }
+        )
         .navigationTitle("")
         .navigationBarHidden(true)
         .background(Color.waraBackground.ignoresSafeArea())
@@ -107,8 +139,11 @@ struct ScannedProductListView: View {
             }
         }
         .onAppear {
-            viewModel.configureDefaultPaginate(20)
-            viewModel.resetAndLoadInitial(query: "")
+            if !hasInitialized {
+                viewModel.configureDefaultPaginate(3)
+                viewModel.resetAndLoadInitial(query: "")
+                hasInitialized = true
+            }
         }
     }
 
@@ -252,6 +287,11 @@ extension ScannedProductListView {
             )
         }
     }
+}
+
+private struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
 }
 
 #Preview {
