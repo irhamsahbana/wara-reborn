@@ -211,7 +211,12 @@ struct CaptureView: View {
                         showScannedProduct = true
                     }
                     .gesture(
-                        DragGesture(minimumDistance: 20)
+                        DragGesture(minimumDistance: 10)
+                            .onChanged { value in
+                                if value.translation.height < -10 {
+                                    showScannedProduct = true
+                                }
+                            }
                             .onEnded { value in
                                 if value.translation.height < -30 {
                                     showScannedProduct = true
@@ -254,7 +259,12 @@ struct CaptureView: View {
             }
         }
         .simultaneousGesture(
-            DragGesture(minimumDistance: 20)
+            DragGesture(minimumDistance: 10)
+                .onChanged { value in
+                    if !areControlsHidden && value.translation.height < -10 && value.startLocation.y > geo.size.height * 0.6 {
+                        showScannedProduct = true
+                    }
+                }
                 .onEnded { value in
                     if !areControlsHidden && value.translation.height < -30 && value.startLocation.y > geo.size.height * 0.6 {
                         showScannedProduct = true

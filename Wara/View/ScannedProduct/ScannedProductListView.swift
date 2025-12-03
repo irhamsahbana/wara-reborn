@@ -39,6 +39,7 @@ struct ScannedProductListView: View {
     @State private var isDragging = false
     @State private var wasAtTopAtDragStart = false
     @State private var latestScrollY: CGFloat = 0
+    private let dismissSwipeDownThreshold: CGFloat = 10
 
     var body: some View {
         ScrollView {
@@ -101,7 +102,7 @@ struct ScannedProductListView: View {
             isAtTop = y >= 0
         }
         .simultaneousGesture(
-            DragGesture(minimumDistance: 10)
+            DragGesture(minimumDistance: 3)
                 .onChanged { _ in
                     if !isDragging {
                         isDragging = true
@@ -109,7 +110,7 @@ struct ScannedProductListView: View {
                     }
                 }
                 .onEnded { value in
-                    if wasAtTopAtDragStart && value.translation.height > 30 && latestScrollY > 0 {
+                    if wasAtTopAtDragStart && value.translation.height > dismissSwipeDownThreshold && latestScrollY > 0 {
                         dismiss()
                     }
                     isDragging = false
@@ -140,7 +141,7 @@ struct ScannedProductListView: View {
         }
         .onAppear {
             if !hasInitialized {
-                viewModel.configureDefaultPaginate(3)
+                viewModel.configureDefaultPaginate(6)
                 viewModel.resetAndLoadInitial(query: "")
                 hasInitialized = true
             }

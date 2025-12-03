@@ -18,36 +18,7 @@ class CategoryRemoteSource {
     private let httpClient = HttpClient.shared
     private let logger = Logger(subsystem: "com.otw.Wara", category: "category")
 
-    private var baseURL: String {
-        // Ambil scheme & host dari Info.plist yang dipetakan via xcconfig
-        let schemeRaw = (Bundle.main.object(forInfoDictionaryKey: "API_SCHEME") as? String) ?? ""
-        let hostRaw = (Bundle.main.object(forInfoDictionaryKey: "API_HOST") as? String) ?? ""
-        let scheme = schemeRaw.trimmingCharacters(in: .whitespacesAndNewlines)
-        let hostVal = hostRaw.trimmingCharacters(in: .whitespacesAndNewlines)
-        precondition(!scheme.isEmpty, "API_SCHEME  missing. Set via xcconfig and map to target configuration.")
-        precondition(!hostVal.isEmpty, "API_HOST missing. Set via xcconfig and map to target configuration.")
-        precondition(scheme == "http" || scheme == "https", "API_SCHEME must be 'http' or 'https'.")
-
-        // Opsional: parse port jika host menyertakan (contoh: localhost:4041)
-        var host = hostVal
-        var port: Int? = nil
-        if let colonIndex = host.firstIndex(of: ":") {
-            let hostname = String(host[..<colonIndex])
-            let portStr = String(host[host.index(after: colonIndex)...])
-            host = hostname
-            if let p = Int(portStr) { port = p }
-        }
-
-        // Rakit URL dasar dari komponen
-        var components = URLComponents()
-        components.scheme = scheme
-        components.host = host
-        components.port = port
-        guard let url = components.url else {
-            preconditionFailure("Invalid API_SCHEME/API_HOST combination.")
-        }
-        return url.absoluteString
-    }
+    private var baseURL: String { Env.apiBaseURL }
 
     /// Mengambil kategori dan mengembalikan array item.
     /// Opsional: filter dengan `kind` (contoh: "recommendation").
