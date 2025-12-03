@@ -99,6 +99,15 @@ struct ScanResultBackView: View {
                 koreanProducent: viewModel.koreanProducent,
                 englishProducent: viewModel.englishProducent
             )
+
+            ReportIssueSection(
+                toEmail: "business.irham@gmail.com",
+                subject: "Report/Request Update",
+                englishName: viewModel.englishName,
+                koreanName: viewModel.koreanName,
+                productId: viewModel.scannedProductId ?? "",
+                isKmf: viewModel.isKMF
+            )
         }
     }
 }

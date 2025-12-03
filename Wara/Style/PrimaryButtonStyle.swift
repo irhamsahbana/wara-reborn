@@ -13,6 +13,9 @@ struct PrimaryButtonStyle: ButtonStyle {
     var borderColor: Color = .blue
     var textColor: Color? = nil
     var cornerRadius: CGFloat = 24
+    var isFullWidth: Bool = true
+    var horizontalPadding: CGFloat = 16
+    var verticalPadding: CGFloat = 12
 
     private var effectiveTextColor: Color {
         if let textColor = textColor {
@@ -26,8 +29,11 @@ struct PrimaryButtonStyle: ButtonStyle {
         configuration.label
             .font(.headline)
             .foregroundColor(effectiveTextColor)
-            .frame(maxWidth: .infinity)
-            .padding()
+            .lineLimit(1)
+            .minimumScaleFactor(0.85)
+            .frame(maxWidth: isFullWidth ? .infinity : nil)
+            .padding(.horizontal, horizontalPadding)
+            .padding(.vertical, verticalPadding)
             .background(
                backgroundColor
             )
@@ -58,4 +64,3 @@ struct PrimaryButtonStyle: ButtonStyle {
     }
     .padding()
 }
-
